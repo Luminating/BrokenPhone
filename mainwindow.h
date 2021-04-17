@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <paintwindow.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,5 +18,11 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    PaintWindow* paintWindow;
+
+private slots:
+    void btnPlayClick();
+
+
 };
 #endif // MAINWINDOW_H
