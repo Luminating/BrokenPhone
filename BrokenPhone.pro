@@ -11,10 +11,12 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    paintscene.cpp \
     paintwindow.cpp
 
 HEADERS += \
     mainwindow.h \
+    paintscene.h \
     paintwindow.h
 
 FORMS += \
