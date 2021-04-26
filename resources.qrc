@@ -6,5 +6,7 @@
         <file alias="slider_handle">images/slider_handle.png</file>
         <file alias="slider_groove">images/Slider_groove_small.png</file>
         <file alias="imgBtnColorActive">images/imgBtnColorActive2.png</file>
+        <file alias="slider_label">images/slider_label.png</file>
+        <file alias="frame">images/frame.png</file>
     </qresource>
 </RCC>

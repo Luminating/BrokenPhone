@@ -11,27 +11,25 @@ PaintWindow::PaintWindow(QWidget *parent) : QWidget(parent), ui(new Ui::PaintWin
     connect(ui->btnNext, SIGNAL(clicked()), this, SLOT(btnNextClick()));
     connect(ui->btnPrev, SIGNAL(clicked()), this, SLOT(btnPrevClick()));
     connect(ui->btnSetFoneColor, SIGNAL(clicked()), this, SLOT(btnSetFoneColorClick()));
+    connect(ui->sldLineWidth, SIGNAL(valueChanged(int)), this, SLOT(sldSetLineWidth(int)));
 
     scene = new PaintScene();       // Инициализируем графическую сцену
     ui->graphicsView->setScene(scene);  // Устанавливаем графическую сцену
     currentFoneColor = QColorConstants::White;
-    ui->graphicsView->setStyleSheet("background-color: rgba(255, 250, 255, 1);");
+    ui->graphicsView->setStyleSheet("background-color: rgba(255, 255, 255, 1);");
 
-/*
+
     ui->sldLineWidth->setStyleSheet("QSlider::groove:horizontal {"
 
-                                        "background: url(:slider_groove);"
+                                        "background: url(:slider_groove) 100% 100% no-repeat;"
                                         "height: 32px;"
-                                        "margin: 13px;}"
+                                        "margin: 13px 0px 13px 0px;}"
 
                                     "QSlider::handle:horizontal {"
                                         "background: url(:slider_handle);"
                                         "width: 32px;"
-                                        "margin: -13px ;}"
+                                        "margin: -13px 38px -13px 38px;}"
                                     );
-
-*/
- // "border: 1px solid black;"
 
     QImage imgActive(":imgBtnColorActive");
     QImage imgInactive(":imgBtnColorInactive");
@@ -78,6 +76,10 @@ void PaintWindow::slotBtnColorClicked(int number){
     }
 }
 
+void PaintWindow::sldSetLineWidth(int numberWidth){
+    int lineWidth[] = {6, 10, 16, 20, 26};
+    scene->setLineWidth(lineWidth[numberWidth -1]);
+}
 
 void PaintWindow::initColorButton(QPushButton* button, QImage imgActive, QImage imgInactive, QColor color){
     QIcon icon;

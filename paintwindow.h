@@ -37,6 +37,7 @@ private slots:
     void btnPrevClick();
     void btnSetFoneColorClick();
     void slotBtnColorClicked(int number);
+    void sldSetLineWidth(int numberWidth);
 
 signals:
     void toMenuWindow();

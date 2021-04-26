@@ -14,12 +14,13 @@ public:
 public:
     void setPenColor(QColor color);
     void setBackgroundColor(QColor color);
+    void setLineWidth(int width);
 
 private:
 
     QPointF previousPoint;
     QColor currentPenColor;
-
+    int currentLineWidth;
 
 private:
     void mousePressEvent(QGraphicsSceneMouseEvent * event);
