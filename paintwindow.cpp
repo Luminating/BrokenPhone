@@ -8,6 +8,7 @@ PaintWindow::PaintWindow(QWidget *parent) : QWidget(parent), ui(new Ui::PaintWin
 {
     ui->setupUi(this);
     connect(ui->btnExit, SIGNAL(clicked()), this, SLOT(btnExitClick()));
+
     connect(ui->btnNext, SIGNAL(clicked()), this, SLOT(btnNextClick()));
     connect(ui->btnPrev, SIGNAL(clicked()), this, SLOT(btnPrevClick()));
     scene = new PaintScene();       // Инициализируем графическую сцену
@@ -95,6 +96,7 @@ void PaintWindow::btnExitClick(){
     emit toMenuWindow();
 }
 
+
 void PaintWindow::btnNextClick(){
 
 }
@@ -112,3 +114,4 @@ void PaintWindow::btnPrevClick(){
         }
     }
 }
+
