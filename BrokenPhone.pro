@@ -10,15 +10,23 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    paintscene.cpp \
+    paintwindow.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    paintscene.h \
+    paintwindow.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    paintwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resources.qrc
