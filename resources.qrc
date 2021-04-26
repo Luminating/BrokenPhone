@@ -1,7 +1,10 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="imgColorButton">images/radio_button.png</file>
-        <file alias="imgBtnColorInactive">images/imgBtnColorInactive.png</file>
-        <file alias="imgBtnColorActive">images/imgBtnColorActive.png</file>
+        <file alias="imgBtnColorInactive1">images/imgBtnColorInactive.png</file>
+        <file alias="imgBtnColorActive1">images/imgBtnColorActive.png</file>
+        <file alias="imgBtnColorInactive">images/imgBtnColorInactive2.png</file>
+        <file alias="slider_handle">images/slider_handle.png</file>
+        <file alias="slider_groove">images/Slider_groove_small.png</file>
+        <file alias="imgBtnColorActive">images/imgBtnColorActive2.png</file>
     </qresource>
 </RCC>
