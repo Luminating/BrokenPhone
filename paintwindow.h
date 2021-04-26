@@ -2,6 +2,10 @@
 #define PAINTWINDOW_H
 
 #include <QWidget>
+#include <QPushButton>
+#include <paintscene.h>
+
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {class PaintWindow; }
@@ -16,14 +20,23 @@ public:
 
 private:
     Ui::PaintWindow *ui;
+    QImage setImageColor(QImage image, QColor color);
+    PaintScene *scene;
+    QPushButton *buttonList[16];
+    QColor colorList[16];
+    void initColorButton(QPushButton* button, QImage imgActive, QImage imgInactive, QColor color);
+
+private slots:
+    void btnExitClick();
+    void btnNextClick();
+    void btnPrevClick();
+    void slotBtnColorClicked(int number);
 
 private slots:
     void btnExitClick();
 
-
 signals:
     void toMenuWindow();
-
 };
 
 #endif // PAINTWINDOW_H

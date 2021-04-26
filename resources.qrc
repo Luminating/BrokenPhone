@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="imgBtnColorInactive">images/imgBtnColorInactive.png</file>
+        <file alias="imgBtnColorActive">images/imgBtnColorActive.png</file>
+    </qresource>
+</RCC>
