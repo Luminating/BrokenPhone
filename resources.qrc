@@ -2,11 +2,20 @@
     <qresource prefix="/">
         <file alias="imgBtnColorInactive1">images/imgBtnColorInactive.png</file>
         <file alias="imgBtnColorActive1">images/imgBtnColorActive.png</file>
-        <file alias="imgBtnColorInactive">images/imgBtnColorInactive2.png</file>
+        <file alias="imgBtnColorInactive2">images/imgBtnColorInactive2.png</file>
         <file alias="slider_handle">images/slider_handle.png</file>
         <file alias="slider_groove">images/Slider_groove_small.png</file>
-        <file alias="imgBtnColorActive">images/imgBtnColorActive2.png</file>
+        <file alias="imgBtnColorActive2">images/imgBtnColorActive2.png</file>
         <file alias="slider_label">images/slider_label.png</file>
         <file alias="frame">images/frame.png</file>
+        <file alias="imgBtnColorActive">images/imgBtnColorActive3.png</file>
+        <file alias="imgBtnColorInactive">images/imgBtnColorInactive3.png</file>
+        <file alias="panelColorButtons">images/panelColorButtons.png</file>
+        <file alias="btnBlackActive">images/btnBlackActive.png</file>
+        <file alias="btnBlackInactive">images/btnBlackInactive.png</file>
+        <file alias="labelForButton">images/labelForButton.png</file>
+        <file alias="messageBox">images/MessageBox.png</file>
+        <file alias="backgroundPaintWidow">images/Background.png</file>
+        <file alias="label1">images/label.png</file>
     </qresource>
 </RCC>

@@ -12,6 +12,8 @@ PaintWindow::PaintWindow(QWidget *parent) : QWidget(parent), ui(new Ui::PaintWin
     connect(ui->btnPrev, SIGNAL(clicked()), this, SLOT(btnPrevClick()));
     connect(ui->btnSetFoneColor, SIGNAL(clicked()), this, SLOT(btnSetFoneColorClick()));
     connect(ui->sldLineWidth, SIGNAL(valueChanged(int)), this, SLOT(sldSetLineWidth(int)));
+    connect(ui->btnSetFoneColor, SIGNAL(pressed()), this, SLOT(btnSetFoneColorClick()));
+
 
     scene = new PaintScene();       // Инициализируем графическую сцену
     ui->graphicsView->setScene(scene);  // Устанавливаем графическую сцену
@@ -67,6 +69,18 @@ PaintWindow::PaintWindow(QWidget *parent) : QWidget(parent), ui(new Ui::PaintWin
     }
     connect(ColorGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotBtnColorClicked(int)));
 
+    //QIcon icon;
+    //ui->btnSetFoneColor->setFixedSize(95, 95);
+    //ui->btnSetFoneColor->setIconSize(QSize(95, 95));
+    ui->btnSetFoneColor->setStyleSheet("QPushButton:pressed {background: url(:btnBlackActive);}"
+                                           "QPushButton {border: none;"
+                                           "background: url(:btnBlackInactive);}");
+    ui->btnNext->setStyleSheet("QPushButton:pressed {background: url(:btnBlackActive);}"
+                                           "QPushButton {border: none;"
+                                           "background: url(:btnBlackInactive);}");
+    ui->btnPrev->setStyleSheet("QPushButton:pressed {background: url(:btnBlackActive);}"
+                                           "QPushButton {border: none;"
+                                           "background: url(:btnBlackInactive);}");
 }
 
 void PaintWindow::slotBtnColorClicked(int number){
@@ -84,8 +98,8 @@ void PaintWindow::sldSetLineWidth(int numberWidth){
 void PaintWindow::initColorButton(QPushButton* button, QImage imgActive, QImage imgInactive, QColor color){
     QIcon icon;
     button->setCheckable(true);
-    button->setFixedSize(60, 60);
-    button->setIconSize(QSize(56, 56));
+    button->setFixedSize(70, 70);
+    button->setIconSize(QSize(68, 68));
     button->setFlat(true);
     icon.addPixmap(QPixmap::fromImage(setImageColor(imgActive, color)), QIcon::Normal, QIcon::On);
     icon.addPixmap(QPixmap::fromImage(setImageColor(imgInactive, color)), QIcon::Normal, QIcon::Off);
@@ -95,15 +109,20 @@ void PaintWindow::initColorButton(QPushButton* button, QImage imgActive, QImage 
 
 
 QImage PaintWindow::setImageColor(QImage image, QColor color){
-    int r,g,b;
+    //int r,g,b;
     for (int i = 0; i < image.width(); i++) {
         for (int j = 0; j < image.height(); j++) {
+            if (image.pixelColor(i, j) == QColorConstants::Black){
+                image.setPixelColor(i, j, color);
+            }
+            /*
             if (image.pixelColor(i,j).alpha() > 0) {
                 r = (image.pixelColor(i,j).red() + color.red()) > 255 ? 255 : image.pixelColor(i,j).red() + color.red();
                 g = (image.pixelColor(i,j).green() + color.green()) > 255 ? 255 : image.pixelColor(i,j).green() + color.green();
                 b = (image.pixelColor(i,j).blue() + color.blue()) > 255 ? 255 : image.pixelColor(i,j).blue() + color.blue();
                 image.setPixelColor(i,j, QColor(r, g, b));
             }
+            */
         }
     }
 
