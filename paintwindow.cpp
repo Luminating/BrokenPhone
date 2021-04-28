@@ -81,6 +81,9 @@ PaintWindow::PaintWindow(QWidget *parent) : QWidget(parent), ui(new Ui::PaintWin
     ui->btnPrev->setStyleSheet("QPushButton:pressed {background: url(:btnBlackActive);}"
                                            "QPushButton {border: none;"
                                            "background: url(:btnBlackInactive);}");
+    ui->btnBigRed->setStyleSheet("QPushButton:pressed {background: url(:btnBigRedActive);}"
+                                           "QPushButton {border: none;"
+                                           "background: url(:btnBigRedInactive);}");
 }
 
 void PaintWindow::slotBtnColorClicked(int number){

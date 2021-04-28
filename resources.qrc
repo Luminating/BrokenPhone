@@ -9,7 +9,7 @@
         <file alias="slider_label">images/slider_label.png</file>
         <file alias="frame">images/frame.png</file>
         <file alias="imgBtnColorActive">images/imgBtnColorActive3.png</file>
-        <file alias="imgBtnColorInactive">images/imgBtnColorInactive3.png</file>
+        <file alias="imgBtnColorInactive3">images/imgBtnColorInactive3.png</file>
         <file alias="panelColorButtons">images/panelColorButtons.png</file>
         <file alias="btnBlackActive">images/btnBlackActive.png</file>
         <file alias="btnBlackInactive">images/btnBlackInactive.png</file>
@@ -17,5 +17,20 @@
         <file alias="messageBox">images/MessageBox.png</file>
         <file alias="backgroundPaintWidow">images/Background.png</file>
         <file alias="label1">images/label.png</file>
+        <file alias="imgBtnColorInactive">images/imgBtnColorInactive4.png</file>
+        <file alias="btnBigRedInactive">images/BigRedButtonInactive.png</file>
+        <file alias="btnBigRedActive">images/BigRedButtonACtive.png</file>
+        <file alias="indicator_off">images/indicator_off.png</file>
+        <file alias="indicator_5">images/Indicator_5.png</file>
+        <file alias="indicator_0">images/Indicator_0.png</file>
+        <file alias="indicator_1">images/Indicator_1.png</file>
+        <file alias="indicator_2">images/Indicator_2.png</file>
+        <file alias="indicator_3">images/Indicator_3.png</file>
+        <file alias="indicator_4">images/Indicator_4.png</file>
+        <file alias="indicator_6">images/Indicator_6.png</file>
+        <file alias="indicator_7">images/Indicator_7.png</file>
+        <file alias="indicator_8">images/Indicator_8.png</file>
+        <file alias="indicator_9">images/Indicator_9.png</file>
+        <file alias="indicator_dots">images/Indicator_dots.png</file>
     </qresource>
 </RCC>

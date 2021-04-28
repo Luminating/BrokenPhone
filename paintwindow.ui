@@ -311,7 +311,7 @@ background-color: rgba(0, 0, 0, 0);</string>
     <property name="geometry">
      <rect>
       <x>1600</x>
-      <y>270</y>
+      <y>360</y>
       <width>95</width>
       <height>95</height>
      </rect>
@@ -335,7 +335,7 @@ background-color: rgba(0, 0, 0, 0);</string>
     <property name="geometry">
      <rect>
       <x>1600</x>
-      <y>160</y>
+      <y>230</y>
       <width>95</width>
       <height>95</height>
      </rect>
@@ -355,11 +355,11 @@ background-color: rgba(0, 0, 0, 0);</string>
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="labelPrev">
     <property name="geometry">
      <rect>
       <x>1710</x>
-      <y>180</y>
+      <y>260</y>
       <width>200</width>
       <height>46</height>
      </rect>
@@ -379,11 +379,11 @@ background-color: rgba(0, 0, 0, 0);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="labelNext">
     <property name="geometry">
      <rect>
       <x>1710</x>
-      <y>290</y>
+      <y>380</y>
       <width>200</width>
       <height>46</height>
      </rect>
@@ -401,6 +401,185 @@ background-color: rgba(0, 0, 0, 0);</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnBigRed">
+    <property name="geometry">
+     <rect>
+      <x>1650</x>
+      <y>830</y>
+      <width>205</width>
+      <height>205</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labIndicator1">
+    <property name="geometry">
+     <rect>
+      <x>1590</x>
+      <y>20</y>
+      <width>60</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="toolTipDuration">
+     <number>-4</number>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/indicator_off);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labIndicator1_num">
+    <property name="geometry">
+     <rect>
+      <x>1590</x>
+      <y>20</y>
+      <width>60</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/indicator_5);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labIndicator2">
+    <property name="geometry">
+     <rect>
+      <x>1650</x>
+      <y>20</y>
+      <width>60</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/indicator_off);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labIndicator3">
+    <property name="geometry">
+     <rect>
+      <x>1710</x>
+      <y>20</y>
+      <width>60</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/indicator_off);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labIndicator4">
+    <property name="geometry">
+     <rect>
+      <x>1770</x>
+      <y>20</y>
+      <width>60</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/indicator_off);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labIndicator5">
+    <property name="geometry">
+     <rect>
+      <x>1830</x>
+      <y>20</y>
+      <width>60</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/indicator_off);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labIndicator2_num">
+    <property name="geometry">
+     <rect>
+      <x>1650</x>
+      <y>20</y>
+      <width>60</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/indicator_8);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labIndicator3_num">
+    <property name="geometry">
+     <rect>
+      <x>1710</x>
+      <y>20</y>
+      <width>60</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/indicator_dots);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labIndicator4_num">
+    <property name="geometry">
+     <rect>
+      <x>1770</x>
+      <y>20</y>
+      <width>60</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/indicator_2);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labIndicator5_num">
+    <property name="geometry">
+     <rect>
+      <x>1830</x>
+      <y>20</y>
+      <width>60</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/indicator_0);</string>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>
