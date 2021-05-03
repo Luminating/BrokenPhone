@@ -5,23 +5,23 @@
 #include <paintwindow.h>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui { class MenuWindow; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
+class MenuWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    MenuWindow(QWidget *parent = nullptr);
+    ~MenuWindow();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MenuWindow *ui;
     PaintWindow* paintWindow;
 
 private slots:
-    void btnPlayClick();
+    void btnCreateRoomClick();
 
 
 };

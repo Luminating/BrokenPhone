@@ -10,17 +10,17 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp \
+    menuwindow.cpp \
     paintscene.cpp \
     paintwindow.cpp
 
 HEADERS += \
-    mainwindow.h \
+    menuwindow.h \
     paintscene.h \
     paintwindow.h
 
 FORMS += \
-    mainwindow.ui \
+    menuwindow.ui \
     paintwindow.ui
 
 # Default rules for deployment.
