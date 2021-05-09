@@ -8,7 +8,7 @@ MenuWindow::MenuWindow(QWidget *parent)
     ui->setupUi(this);
 
     this->showFullScreen();
-    paintWindow = new PaintWindow();
+    paintWindow = new PaintWindow(nullptr, new Client());
     connect(paintWindow, &PaintWindow::toMenuWindow, this, &MenuWindow::showFullScreen);
     connect(ui->btnCreateRoom, SIGNAL(clicked()), this, SLOT(btnCreateRoomClick()));
 }

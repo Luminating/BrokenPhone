@@ -403,7 +403,7 @@ background-color: rgba(0, 0, 0, 0);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnBigRed">
+   <widget class="QPushButton" name="btnReady">
     <property name="geometry">
      <rect>
       <x>1650</x>

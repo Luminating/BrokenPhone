@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QPushButton>
 #include <paintscene.h>
+#include <client.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {class PaintWindow; }
@@ -12,7 +13,7 @@ class PaintWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PaintWindow(QWidget *parent = nullptr);
+    explicit PaintWindow(QWidget *parent = nullptr, Client *client = nullptr);
     ~PaintWindow();
 
 private:
@@ -22,7 +23,8 @@ private:
     QPushButton *btnListColor[12];
     QColor colorList[12];
     QColor currentPenColor;
-    QColor currentFoneColor;
+    QColor currBackgroundColor;
+    Client *client;
 
     QList<QGraphicsItem*> graphicsItemStack;
     int maxElementGraphicsItemStack = 10;
@@ -30,6 +32,7 @@ private:
     QList<QGraphicsItem*> popGraphicsItemStack();
 
     void initColorButton(QPushButton* button, QImage imgActive, QImage imgInactive, QColor color);
+    void turnEnd();
 
 private slots:
     void btnExitClick();
@@ -38,6 +41,7 @@ private slots:
     void btnSetFoneColorClick();
     void slotBtnColorClicked(int number);
     void sldSetLineWidth(int numberWidth);
+    void btnReadyClick();
 
 signals:
     void toMenuWindow();

@@ -3,21 +3,24 @@
 #include <QIcon>
 #include <QButtonGroup>
 #include <QGraphicsItem>
+#include <QBuffer>
 
-PaintWindow::PaintWindow(QWidget *parent) : QWidget(parent), ui(new Ui::PaintWindow)
+PaintWindow::PaintWindow(QWidget *parent, Client *client) : QWidget(parent), ui(new Ui::PaintWindow)
 {
     ui->setupUi(this);
+    this->client = client;
     connect(ui->btnExit, SIGNAL(clicked()), this, SLOT(btnExitClick()));
+    connect(ui->btnReady, SIGNAL(clicked()), this, SLOT(btnReadyClick()));
     connect(ui->btnNext, SIGNAL(clicked()), this, SLOT(btnNextClick()));
     connect(ui->btnPrev, SIGNAL(clicked()), this, SLOT(btnPrevClick()));
     connect(ui->btnSetFoneColor, SIGNAL(clicked()), this, SLOT(btnSetFoneColorClick()));
     connect(ui->sldLineWidth, SIGNAL(valueChanged(int)), this, SLOT(sldSetLineWidth(int)));
     connect(ui->btnSetFoneColor, SIGNAL(pressed()), this, SLOT(btnSetFoneColorClick()));
 
-
     scene = new PaintScene();       // Инициализируем графическую сцену
+    scene->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
     ui->graphicsView->setScene(scene);  // Устанавливаем графическую сцену
-    currentFoneColor = QColorConstants::White;
+    currBackgroundColor = QColorConstants::White;
     ui->graphicsView->setStyleSheet("background-color: rgba(255, 255, 255, 1);");
 
 
@@ -81,7 +84,7 @@ PaintWindow::PaintWindow(QWidget *parent) : QWidget(parent), ui(new Ui::PaintWin
     ui->btnPrev->setStyleSheet("QPushButton:pressed {background: url(:btnBlackActive);}"
                                            "QPushButton {border: none;"
                                            "background: url(:btnBlackInactive);}");
-    ui->btnBigRed->setStyleSheet("QPushButton:pressed {background: url(:btnBigRedActive);}"
+    ui->btnReady->setStyleSheet("QPushButton:pressed {background: url(:btnBigRedActive);}"
                                            "QPushButton {border: none;"
                                            "background: url(:btnBigRedInactive);}");
 }
@@ -147,7 +150,7 @@ void PaintWindow::btnSetFoneColorClick(){
                                                                     QString::number(currentPenColor.green()) + "," +
                                                                     QString::number(currentPenColor.blue()) + "," +
                                                                     "1);");
-    currentFoneColor = currentPenColor;
+    currBackgroundColor = currentPenColor;
 
 }
 
@@ -217,5 +220,23 @@ QList<QGraphicsItem*> PaintWindow::popGraphicsItemStack(){
         }
     }
     return element;
+}
+
+void PaintWindow::btnReadyClick(){
+    turnEnd();
+}
+
+void PaintWindow::turnEnd(){
+    QImage image(scene->sceneRect().size().toSize(), QImage::Format_ARGB32);
+    image.fill(currBackgroundColor);
+    QPainter painter(&image);
+    scene->render(&painter);
+    image.save("picture.png");
+
+    QByteArray array;
+    QBuffer buffer(&array);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "PNG");
+    client->sendByteArray(array);
 }
 

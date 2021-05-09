@@ -23,7 +23,7 @@ private:
     int currentLineWidth;
 
 private:
-    void mousePressEvent(QGraphicsSceneMouseEvent * event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
 };

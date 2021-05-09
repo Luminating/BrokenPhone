@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <paintwindow.h>
+#include <client.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MenuWindow; }
@@ -19,6 +20,7 @@ public:
 private:
     Ui::MenuWindow *ui;
     PaintWindow* paintWindow;
+    Client client;
 
 private slots:
     void btnCreateRoomClick();
