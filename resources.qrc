@@ -32,5 +32,18 @@
         <file alias="indicator_8">images/Indicator_8.png</file>
         <file alias="indicator_9">images/Indicator_9.png</file>
         <file alias="indicator_dots">images/Indicator_dots.png</file>
+        <file alias="btnLeftActive">images/btnLeftActive.png</file>
+        <file alias="btnLeftInactive">images/btnLeftInactive.png</file>
+        <file alias="btnRightActive">images/btnRightActive.png</file>
+        <file alias="btnRightInactive">images/btnRightInactive.png</file>
+        <file alias="lightON">images/LightON.png</file>
+        <file alias="lightOFF">images/LightOFF.png</file>
+        <file alias="btnRedActive">images/btnRedActive.png</file>
+        <file alias="btnRedInactive">images/btnRedInactive.png</file>
+        <file alias="messageBoxShort">images/MessageBox_short.png</file>
+        <file alias="label_long">images/label_long.png</file>
+        <file alias="btnPlayInactive">images/btnPlayInactive.png</file>
+        <file alias="btnPlayActive">images/btnPlayActive.png</file>
+        <file alias="frame_list">images/frame_list.png</file>
     </qresource>
 </RCC>

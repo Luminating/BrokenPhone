@@ -12,25 +12,41 @@ CONFIG += c++11
 SOURCES += \
     client.cpp \
     connection.cpp \
+    connectwindow.cpp \
+    createroomwindow.cpp \
     main.cpp \
     menuwindow.cpp \
     paintscene.cpp \
     paintwindow.cpp \
     peermanager.cpp \
+    player.cpp \
+    resultrecord.cpp \
+    resultwindow.cpp \
+    roomrecord.cpp \
     server.cpp
 
 HEADERS += \
     client.h \
     connection.h \
+    connectwindow.h \
+    createroomwindow.h \
     menuwindow.h \
     paintscene.h \
     paintwindow.h \
     peermanager.h \
+    player.h \
+    resultrecord.h \
+    resultwindow.h \
+    roomrecord.h \
     server.h
 
 FORMS += \
+    connectwindow.ui \
+    createroomwindow.ui \
     menuwindow.ui \
-    paintwindow.ui
+    paintwindow.ui \
+    resultwindow.ui \
+    roomrecord.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

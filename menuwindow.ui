@@ -247,6 +247,20 @@
                </widget>
               </item>
               <item>
+               <widget class="QPushButton" name="btnResult">
+                <property name="text">
+                 <string>*ResultWindow*</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnPaint">
+                <property name="text">
+                 <string>*PaintWindow*</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QPushButton" name="btnExit">
                 <property name="minimumSize">
                  <size>

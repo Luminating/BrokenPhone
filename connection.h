@@ -9,7 +9,7 @@
 #include <QTcpSocket>
 #include <QTimer>
 
-static const int MaxBufferSize = 1024000;
+//static const int MaxBufferSize = 1024000;
 
 class Connection : public QTcpSocket
 {
@@ -43,6 +43,7 @@ signals:
     void readyForUse();
     void newMessage(const QString &from, const QString &message);
     void newByteArray(const QString &from, const QByteArray &array);
+
 protected:
     void timerEvent(QTimerEvent *timerEvent) override;
 

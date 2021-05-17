@@ -32,14 +32,10 @@ Connection::Connection(QObject *parent)
     isGreetingMessageSent = false;
     pingTimer.setInterval(PingInterval);
 
-    connect(this, &QTcpSocket::readyRead, this,
-            &Connection::processReadyRead);
-    connect(this, &QTcpSocket::disconnected,
-            &pingTimer, &QTimer::stop);
-    connect(&pingTimer, &QTimer::timeout,
-            this, &Connection::sendPing);
-    connect(this, &QTcpSocket::connected,
-            this, &Connection::sendGreetingMessage);
+    connect(this, &QTcpSocket::readyRead, this, &Connection::processReadyRead);
+    connect(this, &QTcpSocket::disconnected, &pingTimer, &QTimer::stop);
+    connect(&pingTimer, &QTimer::timeout, this, &Connection::sendPing);
+    connect(this, &QTcpSocket::connected, this, &Connection::sendGreetingMessage);
 }
 
 Connection::Connection(qintptr socketDescriptor, QObject *parent)
@@ -88,7 +84,7 @@ bool Connection::sendByteArray(const QByteArray &array){
     writer.append(ByteArray);
     writer.append(array);
     writer.endMap();
-    printf("sendByteArray size =%d\n",array.size());
+    //printf("sendByteArray size =%d\n",array.size());
     return true;
 }
 
@@ -131,7 +127,7 @@ void Connection::processReadyRead()
             if (!reader.isInteger())
                 break;                  // protocol error
             currentDataType = DataType(reader.toInteger());
-            printf("command ID =%lld \n",reader.toInteger());
+            //printf("command ID =%lld \n",reader.toInteger());
             reader.next();
         } else {
             // Current state: read command payload
@@ -209,8 +205,8 @@ void Connection::sendGreetingMessage()
 
 void Connection::processGreeting()
 {
-    username = buffer + '@' + peerAddress().toString() + ':'
-            + QString::number(peerPort());
+    //username = buffer + '@' + peerAddress().toString() + ':' + QString::number(peerPort());
+    username = buffer + "\n" + peerAddress().toString();
     currentDataType = Undefined;
     buffer.clear();
 
@@ -244,7 +240,7 @@ void Connection::processData()
         pongTime.restart();
         break;
     case ByteArray:
-        printf("ByteArray size processData =%d\n", bufferArray.size());
+        //printf("ByteArray size processData =%d\n", bufferArray.size());
         emit newByteArray(username, bufferArray);
         break;
     default:

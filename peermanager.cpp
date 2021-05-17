@@ -11,7 +11,7 @@ PeerManager::PeerManager(Client *client)
     : QObject(client)
 {
     this->client = client;
-
+    /*
     static const char *envVariables[] = {
         "USERNAME", "USER", "USERDOMAIN", "HOSTNAME", "DOMAINNAME"
     };
@@ -22,7 +22,8 @@ PeerManager::PeerManager(Client *client)
         if (!username.isNull())
             break;
     }
-
+    */
+    username = client->username;
     if (username.isEmpty())
         username = "unknown";
 
@@ -121,7 +122,7 @@ void PeerManager::readBroadcastDatagram()
         if (isLocalHostAddress(senderIp) && senderServerPort == serverPort)
             continue;
 
-        if (!client->hasConnection(senderIp)) {
+        if (!client->hasConnection(senderIp, senderServerPort)) {
             Connection *connection = new Connection(this);
             emit newConnection(connection);
             connection->connectToHost(senderIp, senderServerPort);

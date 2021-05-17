@@ -237,6 +237,6 @@ void PaintWindow::turnEnd(){
     QBuffer buffer(&array);
     buffer.open(QIODevice::WriteOnly);
     image.save(&buffer, "PNG");
-    client->sendByteArray(array);
+    client->sendByteArrayTo(client->roomname.split("\n").at(1), client->roomname.split("\n").at(2), array);
 }
 
