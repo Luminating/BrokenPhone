@@ -22,6 +22,9 @@ private:
     void initUi();
     int fork = 0;
     void showIndicator(int number);
+    void clearResultViews();
+    int getPrevId(int currentId, int maxId);
+    int getMaxStepCount();
 
 public slots:
 

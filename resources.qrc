@@ -15,7 +15,6 @@
         <file alias="btnBlackInactive">images/btnBlackInactive.png</file>
         <file alias="labelForButton">images/labelForButton.png</file>
         <file alias="messageBox">images/MessageBox.png</file>
-        <file alias="backgroundPaintWidow">images/Background.png</file>
         <file alias="label1">images/label.png</file>
         <file alias="imgBtnColorInactive">images/imgBtnColorInactive4.png</file>
         <file alias="btnBigRedInactive">images/BigRedButtonInactive.png</file>
@@ -45,5 +44,12 @@
         <file alias="btnPlayInactive">images/btnPlayInactive.png</file>
         <file alias="btnPlayActive">images/btnPlayActive.png</file>
         <file alias="frame_list">images/frame_list.png</file>
+        <file alias="inputBox1">images/InputBox.png</file>
+        <file alias="inputBox">images/InputBox_light.png</file>
+        <file alias="startImage">images/startImage.png</file>
+        <file alias="backgroundPaintWindow">images/BackgroundWithFrame.png</file>
+        <file alias="backgroundSteel">images/Background.png</file>
+        <file alias="powerON">images/PowerON.png</file>
+        <file alias="powerOFF">images/PowerOFF.png</file>
     </qresource>
 </RCC>

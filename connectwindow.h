@@ -30,8 +30,9 @@ private:
     QList<RoomRecord*> rooms;
     bool isWaitRequest;
     QTimer requestTimer;
-
+    void initUi();
     void showUsername();
+    void showLight(bool isOn);
     void clearRooms();
     QString getRoomName(const QString &code, const QString &IP);
 
@@ -46,6 +47,7 @@ private slots:
     void onSelectRoom(RoomRecord* record);
     void requestTimerTimeout();
     void onPermissionReceived(const QString &from, const QString &id);
+    void onStartGame(const QString &from);
 
 signals:
     void toMenuWindow();

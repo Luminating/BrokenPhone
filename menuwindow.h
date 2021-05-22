@@ -37,6 +37,7 @@ private slots:
     void btnResultClick(); // delete
     void btnPaintClick(); // delete
     void changeUserName();
-
+    void onStartGame(const QString &from);
+    void onEndGame(const QString &from);
 };
 #endif // MAINWINDOW_H

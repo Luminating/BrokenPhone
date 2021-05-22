@@ -23,7 +23,12 @@ private:
     void showIndicator(int number);
     void showLight(bool isOn);
     QString getPlayerName(const QString &code, const QString &IP);
-    void sendPlayersInRoom();
+    QTimer stepTimer;
+    int stepSecondsLeft;
+    void stepBody(bool isError);
+    int getNextId(int currentId);
+    void endGame();
+    bool isGameOver;
 
 public slots:
     void updatePlayerList();
@@ -32,9 +37,11 @@ private slots:
     void btnExitClick();
     void btnCreateRoomClick();
     void permissionConnectToRoom(const QString &username);
+    void disconnectFromRoom(const QString &username);
     void btnIncCountClick();
     void btnDecCountClick();
     void btnPlayClick();
+    void nextGameStep();
 
 signals:
     void toMenuWindow();

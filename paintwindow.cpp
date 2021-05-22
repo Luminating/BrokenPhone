@@ -3,7 +3,11 @@
 #include <QIcon>
 #include <QButtonGroup>
 #include <QGraphicsItem>
+#include <QGraphicsView>
 #include <QBuffer>
+#include <QDir>
+
+static const int GameStepInterval = 1 * 60; /// 1 min
 
 PaintWindow::PaintWindow(QWidget *parent, Client *client) : QWidget(parent), ui(new Ui::PaintWindow)
 {
@@ -16,13 +20,28 @@ PaintWindow::PaintWindow(QWidget *parent, Client *client) : QWidget(parent), ui(
     connect(ui->btnSetFoneColor, SIGNAL(clicked()), this, SLOT(btnSetFoneColorClick()));
     connect(ui->sldLineWidth, SIGNAL(valueChanged(int)), this, SLOT(sldSetLineWidth(int)));
     connect(ui->btnSetFoneColor, SIGNAL(pressed()), this, SLOT(btnSetFoneColorClick()));
+    connect(&indicatorTimer, SIGNAL(timeout()), this, SLOT(startTimeIndicator()));
 
-    scene = new PaintScene();       // Инициализируем графическую сцену
-    scene->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
-    ui->graphicsView->setScene(scene);  // Устанавливаем графическую сцену
+    connect(client, SIGNAL(startGame(QString)), this, SLOT(onStartGame(QString)));
+    connect(client, SIGNAL(nextGameStep(QString)), this, SLOT(onNextGameStep(QString)));
+    connect(client, SIGNAL(gameShowImage(QString, QByteArray)), this, SLOT(onGameShowImage(QString, QByteArray)));
+    connect(client, SIGNAL(gameShowMessage(QString, QString)), this, SLOT(onGameShowMessage(QString, QString)));
+    connect(client, SIGNAL(endGame(QString)), this, SLOT(onEndGame(QString)));
+
+    stepSecondsLeft = GameStepInterval;
+    indicatorTimer.setInterval(1 * 1000);
+
+    graphicsView = new QGraphicsView();
+    graphicsView->setMinimumSize(QSize(943, 594));
+    graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //printf("width %d\n",graphicsView->width());   ////// del
+    paintscene = new PaintScene();       // Инициализируем графическую сцену
+    paintscene->setSceneRect(0, 0, graphicsView->width(), graphicsView->height());
+    graphicsView->setScene(paintscene);  // Устанавливаем графическую сцену
     currBackgroundColor = QColorConstants::White;
-    ui->graphicsView->setStyleSheet("background-color: rgba(255, 255, 255, 1);");
-
+    graphicsView->setStyleSheet("background-color: rgba(255, 255, 255, 1);");
+    ui->frameLayout->addWidget(graphicsView);
 
     ui->sldLineWidth->setStyleSheet("QSlider::groove:horizontal {"
 
@@ -35,6 +54,8 @@ PaintWindow::PaintWindow(QWidget *parent, Client *client) : QWidget(parent), ui(
                                         "width: 32px;"
                                         "margin: -13px 38px -13px 38px;}"
                                     );
+
+
 
     QImage imgActive(":imgBtnColorActive");
     QImage imgInactive(":imgBtnColorInactive");
@@ -52,7 +73,6 @@ PaintWindow::PaintWindow(QWidget *parent, Client *client) : QWidget(parent), ui(
     colorList[10] = QColorConstants::Green;
     colorList[11] = QColorConstants::Yellow;
 
-
     QButtonGroup* ColorGroup = new QButtonGroup(ui->groupBoxColor);
     ColorGroup->setExclusive(true);
     for(int i = 0; i < 12; i++){
@@ -67,14 +87,11 @@ PaintWindow::PaintWindow(QWidget *parent, Client *client) : QWidget(parent), ui(
         if (i==0){
             btnListColor[0]->setChecked(true);
             currentPenColor = colorList[0];
-            scene->setPenColor(colorList[0]);
+            paintscene->setPenColor(colorList[0]);
         }
     }
     connect(ColorGroup, SIGNAL(buttonClicked(int)), this, SLOT(slotBtnColorClicked(int)));
 
-    //QIcon icon;
-    //ui->btnSetFoneColor->setFixedSize(95, 95);
-    //ui->btnSetFoneColor->setIconSize(QSize(95, 95));
     ui->btnSetFoneColor->setStyleSheet("QPushButton:pressed {background: url(:btnBlackActive);}"
                                            "QPushButton {border: none;"
                                            "background: url(:btnBlackInactive);}");
@@ -92,13 +109,13 @@ PaintWindow::PaintWindow(QWidget *parent, Client *client) : QWidget(parent), ui(
 void PaintWindow::slotBtnColorClicked(int number){
     if (btnListColor[number]->isChecked()){
         currentPenColor = colorList[number];
-        scene->setPenColor(colorList[number]);
+        paintscene->setPenColor(colorList[number]);
     }
 }
 
 void PaintWindow::sldSetLineWidth(int numberWidth){
     int lineWidth[] = {6, 10, 16, 20, 26};
-    scene->setLineWidth(lineWidth[numberWidth -1]);
+    paintscene->setLineWidth(lineWidth[numberWidth -1]);
 }
 
 void PaintWindow::initColorButton(QPushButton* button, QImage imgActive, QImage imgInactive, QColor color){
@@ -146,7 +163,7 @@ void PaintWindow::btnExitClick(){
 }
 
 void PaintWindow::btnSetFoneColorClick(){
-    ui->graphicsView->setStyleSheet("background-color: rgba(" +  QString::number(currentPenColor.red()) + "," +
+    graphicsView->setStyleSheet("background-color: rgba(" +  QString::number(currentPenColor.red()) + "," +
                                                                     QString::number(currentPenColor.green()) + "," +
                                                                     QString::number(currentPenColor.blue()) + "," +
                                                                     "1);");
@@ -156,21 +173,18 @@ void PaintWindow::btnSetFoneColorClick(){
 
 
 void PaintWindow::btnNextClick(){
-   // ui->labMessage->setText(QString::number(graphicsItemStack.size()));
     QList<QGraphicsItem*> element = popGraphicsItemStack();
-    //ui->labMessage->setText(QString::number(element.size()));
     for (int i = 0; i < element.size(); i++) {
-        scene->addItem(element[i]);
+        paintscene->addItem(element[i]);
     }
 }
 
 void PaintWindow::btnPrevClick(){
-    //ui->labMessage->setText(QString::number(scene->items().size()));
-    QList<QGraphicsItem*> items = scene->items();
+    QList<QGraphicsItem*> items = paintscene->items();
     QList<QGraphicsItem*> element;
     for (int i = 0; i < items.size(); i++){
         QGraphicsItem* item = items[i];
-        scene->removeItem(item);
+        paintscene->removeItem(item);
         element.push_front(item);
         if ((item->type() == QGraphicsEllipseItem::Type)){
             break;
@@ -227,16 +241,91 @@ void PaintWindow::btnReadyClick(){
 }
 
 void PaintWindow::turnEnd(){
-    QImage image(scene->sceneRect().size().toSize(), QImage::Format_ARGB32);
-    image.fill(currBackgroundColor);
-    QPainter painter(&image);
-    scene->render(&painter);
-    image.save("picture.png");
+    if (!isPressedTurnEnd){
+        if ((client->currentGameStep % 2) == 0) { /// step 0,2,4,.. - text , step 1,3,5, - image
+            QString message = "gameMessageResult\n" + ui->lineEdit->text() + "\n" + QString::number(client->currentGameStep) + "\n" + QString::number(client->userId);
+            client->sendMessageTo(client->roomname.split("\n").at(1), client->roomname.split("\n").at(2), message);
+            ui->labMessage->setText("Сообщение ушло");  /////////
+        } else {
+            QImage image(paintscene->sceneRect().size().toSize(), QImage::Format_ARGB32);
+            image.fill(currBackgroundColor);
+            QPainter painter(&image);
+            paintscene->render(&painter);
 
-    QByteArray array;
-    QBuffer buffer(&array);
-    buffer.open(QIODevice::WriteOnly);
-    image.save(&buffer, "PNG");
-    client->sendByteArrayTo(client->roomname.split("\n").at(1), client->roomname.split("\n").at(2), array);
+            QByteArray array;
+            QBuffer buffer(&array);
+            buffer.open(QIODevice::WriteOnly);
+            image.save(&buffer, "PNG");
+            array = client->commandToByteArray("gameImageResult\n" + QString::number(client->currentGameStep) + "\n" + QString::number(client->userId), array);
+            client->sendByteArrayTo(client->roomname.split("\n").at(1), client->roomname.split("\n").at(2), array);
+            ui->labMessage->setText("Сообщение ушло");  ////////
+        }
+    }
+    isPressedTurnEnd = true;
 }
 
+
+void PaintWindow::startTimeIndicator(){
+    stepSecondsLeft--;
+    int timeSec = stepSecondsLeft;
+    int min_1 = (timeSec / 60) / 10;
+    ui->labIndicator1_num->setStyleSheet("QLabel{background: url(:indicator_" + QString::number(min_1) + ");}");
+    int min_0 = (timeSec / 60) % 10;
+    ui->labIndicator2_num->setStyleSheet("QLabel{background: url(:indicator_" + QString::number(min_0) + ");}");
+    int sec_1 = (timeSec % 60) / 10;
+    ui->labIndicator4_num->setStyleSheet("QLabel{background: url(:indicator_" + QString::number(sec_1) + ");}");
+    int sec_0 = (timeSec % 60) % 10;
+    ui->labIndicator5_num->setStyleSheet("QLabel{background: url(:indicator_" + QString::number(sec_0) + ");}");
+
+    indicatorTimer.setInterval(1 * 1000);
+    if (stepSecondsLeft > 0) {
+        indicatorTimer.start();
+    } else {
+        indicatorTimer.stop();
+        turnEnd();
+    }
+}
+
+void PaintWindow::onStartGame(const QString &from){
+    client->currentGameStep = 0;
+    stepSecondsLeft = GameStepInterval;
+    isPressedTurnEnd = false;
+    startTimeIndicator();
+
+}
+
+void PaintWindow::onNextGameStep(const QString &from){
+    stepSecondsLeft = GameStepInterval;
+    isPressedTurnEnd = false;
+    startTimeIndicator();
+}
+
+
+void PaintWindow::onGameShowImage(const QString &from, const QByteArray &array){
+    QImage image;
+    image.loadFromData(array, "PNG");
+
+    QGraphicsPixmapItem *item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+    QGraphicsScene* scene = new QGraphicsScene;
+    scene->addItem(item);
+    graphicsView->setScene(scene);
+    if (client->currentGameStep == 0) {
+        ui->labMessage->setText("Начинаем, введите фразу");
+    } else {
+        ui->labMessage->setText("Напишите, что видите");
+    }
+    ui->lineEdit->setText("");
+    ui->lineEdit->setReadOnly(false);
+}
+
+
+void PaintWindow::onGameShowMessage(const QString &from, const QString &message){
+    graphicsView->setScene(paintscene);
+    ui->labMessage->setText("Нарисуйте: " + message);
+    ui->lineEdit->setText("");
+    ui->lineEdit->setReadOnly(true);
+}
+
+void PaintWindow::onEndGame(const QString &from){
+    this->close();
+}

@@ -14,6 +14,7 @@ ConnectWindow::ConnectWindow(QWidget *parent, Client *client) : QWidget(parent),
     connect(client, SIGNAL(updatePlayers()), this, SLOT(updatePlayerList()));
     connect(&requestTimer, SIGNAL(timeout()), this, SLOT(requestTimerTimeout()));
     connect(client, SIGNAL(permissionConnectToRoom(QString, QString)), this, SLOT(onPermissionReceived(QString, QString)));
+    connect(client, SIGNAL(startGame(QString)), this, SLOT(onStartGame(QString)));
     showUsername();
     roomName = "";
     roomCode = "";
@@ -22,7 +23,24 @@ ConnectWindow::ConnectWindow(QWidget *parent, Client *client) : QWidget(parent),
     waitFromRoomIP = "";
     isWaitRequest = false;
     requestTimer.setInterval(WaitRequestInterval);
+    initUi();
 }
+
+void ConnectWindow::initUi(){
+    //ui->labelMessage->setText("You are not connected to the room");
+    ui->labelMessage->setText("Вы не подключены ни к какой из комнат");
+    showLight(false);
+    ui->btnConnect->setStyleSheet("QPushButton:pressed {background: url(:btnBlackActive);}"
+                                           "QPushButton {border: none;"
+                                           "background: url(:btnBlackInactive);}");
+    ui->btnDisconnect->setStyleSheet("QPushButton:pressed {background: url(:btnRedActive);}"
+                                           "QPushButton {border: none;"
+                                           "background: url(:btnRedInactive);}");
+    ui->btnExit->setStyleSheet("QPushButton:pressed {background: url(:powerOFF);}"
+                                           "QPushButton {border: none;"
+                                           "background: url(:powerON);}");
+}
+
 
 ConnectWindow::~ConnectWindow()
 {
@@ -32,6 +50,15 @@ ConnectWindow::~ConnectWindow()
 void ConnectWindow::showUsername(){
     ui->labUserName->setText(client->username.split("\n").at(0));
 }
+
+void ConnectWindow::showLight(bool isOn){
+    if (isOn){
+       ui->labelLight->setStyleSheet("QLabel{background: url(:lightON);}");
+    } else {
+        ui->labelLight->setStyleSheet("QLabel{background: url(:lightOFF);}");
+    }
+}
+
 
 void ConnectWindow::btnExitClick(){
     this->close();
@@ -86,8 +113,18 @@ void ConnectWindow::btnConnectClick(){
 }
 
 void ConnectWindow::btnDisonnectClick(){
-
-
+    if (isWaitRequest) return;
+    if (roomCode == "") return;
+    QString message = "disconnectFromRoom\n\n";
+    client->sendMessageTo(roomCode, roomIP, message);
+    roomCode = "";
+    roomIP = "";
+    roomName = "";
+    waitFromRoomCode ="";
+    waitFromRoomIP = "";
+    //ui->labelMessage->setText("You are not connected to the room");
+    ui->labelMessage->setText("Вы не подключены ни к какой из комнат");
+    showLight(false);
 }
 
 
@@ -108,7 +145,9 @@ void ConnectWindow::onPermissionReceived(const QString &from, const QString &id)
         roomIP = from.split("\n").at(2);
         roomName = getRoomName(roomCode, roomIP);
         client->roomname = roomName + "\n" + roomCode + "\n" + roomIP;
-        ui->labUserName->setText("connect to room " + roomName + " player ID = " + id);
+        client->userId = id.toInt();
+        ui->labelMessage->setText("connect to room " + roomName + " player ID = " + id);
+        showLight(true);
     }
 }
 
@@ -133,4 +172,10 @@ void ConnectWindow::onSelectRoom(RoomRecord* record){
             rooms.at(i)->fillBackground("background-color: rgba(150, 150, 150, 0.2); color: rgb(0, 0, 0); font-size: 14pt;");
         }
     }
+}
+
+void ConnectWindow::onStartGame(const QString &from) {
+    requestTimer.stop();   /// ?????
+    isWaitRequest = false; /// ???
+    this->close();
 }

@@ -1,6 +1,10 @@
 #include "createroomwindow.h"
 #include "ui_createroomwindow.h"
 #include <QStringListModel>
+#include <QBuffer>
+#include <QMutableListIterator>
+
+static const int MaxGameStepInterval = 1 * 60 + 10;  // in sec
 
 CreateRoomWindow::CreateRoomWindow(QWidget *parent, Client *client) : QWidget(parent), ui(new Ui::CreateRoomWindow)
 {
@@ -11,11 +15,15 @@ CreateRoomWindow::CreateRoomWindow(QWidget *parent, Client *client) : QWidget(pa
     connect(ui->btnCreateRoom, SIGNAL(clicked()), this, SLOT(btnCreateRoomClick()));
     connect(client, SIGNAL(updatePlayers()), this, SLOT(updatePlayerList()));
     connect(client, SIGNAL(requestConnectToRoom(QString)), this, SLOT(permissionConnectToRoom(QString)));
+    connect(client, SIGNAL(disconnectFromRoom(QString)), this, SLOT(disconnectFromRoom(QString)));
     connect(ui->btnIncCount, SIGNAL(clicked()), this, SLOT(btnIncCountClick()));
     connect(ui->btnDecCount, SIGNAL(clicked()), this, SLOT(btnDecCountClick()));
     connect(ui->btnPlay, SIGNAL(clicked()), this, SLOT(btnPlayClick()));
-    //connect(ui->btnCreateRoom, SIGNAL(clicked()), this, SLOT(btnCreateRoomClick()));
-    //connect(ui->btnAbout, SIGNAL(clicked()), this, SLOT(btnAboutClick()));
+    connect(&stepTimer, SIGNAL(timeout()), this, SLOT(nextGameStep())); ///////////
+
+
+    stepSecondsLeft = MaxGameStepInterval;
+    stepTimer.setInterval(1 * 1000); // 1 sec
 
     ui->labelMessage->setText("Комната " + client->username.split("\n").at(0));
     showIndicator(client->maxPlayerCount);
@@ -101,6 +109,21 @@ void CreateRoomWindow::permissionConnectToRoom(const QString &username){
     }
 }
 
+void CreateRoomWindow::disconnectFromRoom(const QString &username){
+    QString usercode = username.split("\n").at(1);
+    QString userIP = username.split("\n").at(2);
+    QMutableListIterator<Player*> player(client->playersInRoom);
+    while (player.hasNext()) {
+        Player* currPlayer = player.next();
+        if ((currPlayer->usercode == usercode) && (currPlayer->userIP == userIP)){
+            player.remove();
+        }
+    }
+    client->userstatus = "Room" + QString::number(client->playersInRoom.size()) +"/" + QString::number(client->maxPlayerCount);
+    updatePlayerList();
+
+}
+
 int CreateRoomWindow::getNextPlayerId(){
     int id = 0;
     bool isIdPresent = false;
@@ -157,17 +180,138 @@ void CreateRoomWindow::showLight(bool isOn){
     }
 }
 
-void CreateRoomWindow::sendPlayersInRoom(){
- //   for (Player* playerTo : client->playersInRoom){
- //       QString message = "sendPlayersInRoom";
- //
- //
- //
- //   }
+
+void CreateRoomWindow::nextGameStep(){
+    stepSecondsLeft--;
+
+    int returnResultPlayersCount = 0;
+    for (ResultRecord* record : client->result){
+        if (record->gameStep == client->currentGameStep){
+            returnResultPlayersCount++;
+        }
+    }
+    bool isError = false;
+    stepTimer.setInterval(1 * 1000);
+    if ((stepSecondsLeft < 0) || (returnResultPlayersCount == client->maxPlayerCount)) {
+        printf("step =%d stepSecondsLeft =%d returnResultPlayersCount =%d\n", client->currentGameStep, stepSecondsLeft, returnResultPlayersCount);
+        stepTimer.stop();
+        if (returnResultPlayersCount != client->maxPlayerCount){
+            printf("stepBody Error step %d\n", client->currentGameStep);
+            isError = true;
+        }
+        stepBody(isError);
+    } else {
+        stepTimer.start();
+    }
+}
+
+void CreateRoomWindow::stepBody(bool isError){
+    if (isError){
+        //printf("stepBody Error\n");
+        return;
+    }
+
+    if (client->currentGameStep == client->maxPlayerCount - 1) {
+        endGame();
+        return;
+    }
+
+    for(Player* player : client->playersInRoom){
+        int nextId = getNextId(player->id);
+
+        if ((client->currentGameStep % 2) == 0) { /// step 0,2,4,.. - text , step 1,3,5, - image
+            QString message = "gameShowMessage\n" + client->getFromResult(client->currentGameStep, nextId)->message;
+            client->sendMessageTo(player->usercode, player->userIP, message);
+        } else {
+            QImage image = client->getFromResult(client->currentGameStep, nextId)->image;
+            QByteArray array;
+            QBuffer buffer(&array);
+            buffer.open(QIODevice::WriteOnly);
+            image.save(&buffer, "PNG");
+
+            array = client->commandToByteArray("gameShowImage\n*", array);
+            client->sendByteArrayTo(player->usercode, player->userIP, array);
+        }
+    }
+
+    client->currentGameStep++;
+    for(Player* player : client->playersInRoom){
+        QString message = "setGameStep\n" + QString::number(client->currentGameStep);
+        client->sendMessageTo(player->usercode, player->userIP, message);
+    }
+
+    for(Player* player : client->playersInRoom){
+        QString message = "nextGameStep\n\n";
+        client->sendMessageTo(player->usercode, player->userIP, message);
+    }
+    if(!isGameOver){
+        stepSecondsLeft = MaxGameStepInterval;
+        nextGameStep();
+    }
+}
+
+
+void CreateRoomWindow::endGame(){
+    isGameOver = true;
+    printf("Game Over\n");
+    for(Player* player : client->playersInRoom){  /// send to all results
+        for(ResultRecord* record : client->result){
+            if (!record->image.isNull()) { //// image
+                QByteArray array;
+                QBuffer buffer(&array);
+                buffer.open(QIODevice::WriteOnly);
+                record->image.save(&buffer, "PNG");
+                array = client->commandToByteArray("gameImageResult\n" + QString::number(record->gameStep) + "\n" + QString::number(record->playerID), array);
+                client->sendByteArrayTo(player->usercode, player->userIP, array);
+
+            } else {  //// message
+                QString message = "gameMessageResult\n" + record->message + "\n" + QString::number(record->gameStep) + "\n" + QString::number(record->playerID);
+                client->sendMessageTo(player->usercode, player->userIP, message);
+            }
+        }
+    }
+
+    for(Player* player : client->playersInRoom){
+        QString message = "endGame\n\n";
+        client->sendMessageTo(player->usercode, player->userIP, message);
+    }
+
+    //// end, goto ??? Window
+
 
 }
 
+
+int CreateRoomWindow::getNextId(int currentId){
+    int result = currentId;
+    if (currentId == client->maxPlayerCount - 1){
+        result = 0;
+    } else {
+        result++;
+    }
+    return result;
+}
+
 void CreateRoomWindow::btnPlayClick(){
+    for(Player* player : client->playersInRoom) {
+        QString message = "gameShowMessage\nНачинаем игру - введите фразу и нажмите ГОТОВО";
+        client->sendMessageTo(player->usercode, player->userIP, message);
+        message = "startGame\n\n";
+        client->sendMessageTo(player->usercode, player->userIP, message);
 
 
+        QImage image = QImage(":/startImage");
+        //QDir::currentPath() + "/images_menu/" + imgName
+        QByteArray array;
+        QBuffer buffer(&array);
+        buffer.open(QIODevice::WriteOnly);
+        image.save(&buffer, "PNG");
+
+        array = client->commandToByteArray("gameShowImage\n*", array);
+        client->sendByteArrayTo(player->usercode, player->userIP, array);
+
+        isGameOver = false;
+        stepSecondsLeft = MaxGameStepInterval;
+        nextGameStep();
+    }
 }

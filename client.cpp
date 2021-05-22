@@ -81,9 +81,8 @@ void Client::readyForUse()
     if (!connection || hasConnection(connection->peerAddress(), connection->peerPort())) return;
 
     connect(connection,  &Connection::newMessage, this, &Client::newMessage); /////// delete ??????????
-    connect(connection, &Connection::newMessage, this, &Client::commandDecoder);
-    //connect(connection,  &Connection::newByteArray, this, &Client::newByteArray);
-    connect(connection,  &Connection::newByteArray, this, &Client::saveImageToResult);
+    connect(connection, &Connection::newMessage, this, &Client::commandMessageDecoder);
+    connect(connection,  &Connection::newByteArray, this, &Client::commandByteArrayDecoder);
 
     peers.insert(connection->peerAddress(), connection);
     QString nick = connection->name();
@@ -134,15 +133,6 @@ bool Client::isPlayerPresent(const QString &usercode, const QString &userIP){
     return isPresent;
 }
 
-int Client::getPlayerIdInRoom(const QString &usercode, const QString &userIP){
-    int id = -1;
-    for (Player* player: playersInRoom){
-        if ((player->usercode == usercode) && (player->userIP == userIP)){
-            return player->id;
-        }
-    }
-    return id;
-}
 
 void Client::sendPlayersData(){
 
@@ -183,7 +173,7 @@ void Client::sendByteArrayTo(const QString &sendercode, const QString &senderIP,
     }
 }
 
-void Client::commandDecoder(const QString &from, const QString &message){
+void Client::commandMessageDecoder(const QString &from, const QString &message){
     QStringList messageList = message.split("\n");
     if (messageList.size() < 2) {
         return;
@@ -241,20 +231,98 @@ void Client::commandDecoder(const QString &from, const QString &message){
     if (command == "permissionConnectToRoom"){
         emit permissionConnectToRoom(from, commandPayload);
     }
+
+    if (command == "disconnectFromRoom"){
+        emit disconnectFromRoom(from);
+    }
+
+    if (command == "gameMessageResult"){
+        int step = messageList.at(2).toInt();
+        int id = messageList.at(3).toInt();
+        saveMessageToResult(from, commandPayload, step, id);
+    }
+
+    if (command == "startGame"){
+        emit startGame(from);
+    }
+
+    if (command == "endGame"){
+        emit endGame(from);
+    }
+
+    if (command == "setGameStep") {
+        currentGameStep = commandPayload.toInt();
+        emit setGameStep(from, commandPayload);
+    }
+
+    if (command == "gameShowMessage") {
+        emit gameShowMessage(from, commandPayload);
+    }
+
+    if (command == "nextGameStep"){
+        emit nextGameStep(from);
+    }
 }
 
+QByteArray Client::commandToByteArray(const QString &command, const QByteArray &array){
+    QByteArray arrayResult = command.toUtf8();
+    arrayResult = arrayResult.leftJustified(256, ' ');
+    arrayResult.append(array);
+    return arrayResult;
+}
 
-void Client::saveImageToResult(const QString &from, const QByteArray &array){
-    QString usercode = from.split("\n").at(1);
-    QString userIP = from.split("\n").at(2);
-    int id = getPlayerIdInRoom(usercode, userIP);
-    if (id > -1){
+QString Client::byteArrayToCommand(const QByteArray &array){
+    return QString::fromUtf8(array).trimmed();
+}
+
+void Client::commandByteArrayDecoder(const QString &from, const QByteArray &array){
+    QStringList fullUsername = from.split("\n");
+    if (fullUsername.size() != 3) return;
+    QString usercode = fullUsername.at(1);
+    QString userIP = fullUsername.at(2);
+    QStringList messageList = byteArrayToCommand(array.left(256)).split('\n');
+    //printf("command %s\n", (byteArrayToCommand(array.left(256)) + "#").toLocal8Bit().constData());
+    QByteArray arrayPayload = array.right(array.size() - 256);
+
+    QString command = messageList.at(0);
+
+    if (command == "gameImageResult"){
+        int step = messageList.at(1).toInt();
+        int id = messageList.at(2).toInt();
+        emit saveImageToResult(from, arrayPayload, step, id);
+    }
+
+    if (command == "gameShowImage") {
+        emit gameShowImage(from, arrayPayload);
+    }
+
+}
+
+void Client::saveImageToResult(const QString &from, const QByteArray &array, const int &step, const int &id){
         ResultRecord* record = new ResultRecord;
         QImage image;
         image.loadFromData(array, "PNG");
         record->image = image;
         record->message = "";
         record->playerID = id;
+        record->gameStep = step;
         result.append(record);
+}
+
+void Client::saveMessageToResult(const QString &from, const QString &message, const int &step, const int &id){
+        ResultRecord* record = new ResultRecord;
+        record->message = message;
+        record->playerID = id;
+        record->gameStep = step;
+        result.append(record);
+}
+
+ResultRecord* Client::getFromResult(int step, int id){
+    ResultRecord* resultrecord = NULL;
+    for (ResultRecord* record : result){
+        if ((record->gameStep == step) && (record->playerID == id)){
+            resultrecord = record;
+        }
     }
+    return resultrecord;
 }
