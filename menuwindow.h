@@ -29,11 +29,13 @@ private:
     Client* client;
     QString username;
     QString usercode;
+    void initUI();
 
 private slots:
     void btnCreateRoomClick();
     void btnConnectClick();
     void btnAboutClick();
+    void btnExitClick();
     void btnResultClick(); // delete
     void btnPaintClick(); // delete
     void changeUserName();

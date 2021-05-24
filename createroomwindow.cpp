@@ -3,6 +3,7 @@
 #include <QStringListModel>
 #include <QBuffer>
 #include <QMutableListIterator>
+#include <QFontDatabase>
 
 static const int MaxGameStepInterval = 1 * 60 + 10;  // in sec
 
@@ -46,6 +47,19 @@ void CreateRoomWindow::initUi(){
     ui->btnPlay->setStyleSheet("QPushButton:pressed {background: url(:btnPlayActive);}"
                                            "QPushButton {border: none;"
                                            "background: url(:btnPlayInactive);}");
+
+    int id = QFontDatabase::addApplicationFont(":fonts/20322");
+    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+    QFont menuFont(family);
+    menuFont.setPointSize(26);
+    ui->listPlayers->setFont(menuFont);
+    ui->labelMessage->setFont(menuFont);
+    menuFont.setPointSize(20);
+    ui->labelBtn1->setFont(menuFont);
+    ui->labelBtn2->setFont(menuFont);
+    menuFont.setPointSize(18);
+    ui->labelRoomCount->setFont(menuFont);
+
 }
 
 

@@ -3,6 +3,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QFontDatabase>
 
 ResultWindow::ResultWindow(QWidget *parent, Client *client) : QWidget(parent), ui(new Ui::ResultWindow)
 {
@@ -23,6 +24,24 @@ void ResultWindow::initUi(){
     ui->btnDecCount->setStyleSheet("QPushButton:pressed {background: url(:btnLeftActive);}"
                                            "QPushButton {border: none;"
                                            "background: url(:btnLeftInactive);}");
+    ui->btnUpdate->setStyleSheet("QPushButton:pressed {background: url(:btnBlackActive);}"
+                                           "QPushButton {border: none;"
+                                           "background: url(:btnBlackInactive);}");
+
+    int id = QFontDatabase::addApplicationFont(":fonts/19287");
+    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+    QFont titleFont(family);
+    titleFont.setPointSize(60);
+    ui->labelTitle->setFont(titleFont);
+
+    id = QFontDatabase::addApplicationFont(":fonts/20322");
+    family = QFontDatabase::applicationFontFamilies(id).at(0);
+    QFont menuFont(family);
+    menuFont.setPointSize(22);
+    ui->labelCount->setFont(menuFont);
+    ui->labelShow->setFont(menuFont);
+
+
 }
 
 ResultWindow::~ResultWindow()

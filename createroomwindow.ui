@@ -29,7 +29,7 @@
   <widget class="QListView" name="listPlayers">
    <property name="geometry">
     <rect>
-     <x>570</x>
+     <x>790</x>
      <y>210</y>
      <width>340</width>
      <height>340</height>
@@ -41,156 +41,11 @@
     </font>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnCreateRoom">
-   <property name="geometry">
-    <rect>
-     <x>290</x>
-     <y>300</y>
-     <width>95</width>
-     <height>95</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>28</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labIndicator">
-   <property name="geometry">
-    <rect>
-     <x>690</x>
-     <y>710</y>
-     <width>60</width>
-     <height>120</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-image: url(:/indicator_off);</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labIndicator_num">
-   <property name="geometry">
-    <rect>
-     <x>690</x>
-     <y>710</y>
-     <width>60</width>
-     <height>120</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelRoomCount">
-   <property name="geometry">
-    <rect>
-     <x>620</x>
-     <y>650</y>
-     <width>200</width>
-     <height>46</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>14</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-image: url(:/label1);
-color: rgb(0, 0, 0);</string>
-   </property>
-   <property name="text">
-    <string>Число игроков</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnIncCount">
-   <property name="geometry">
-    <rect>
-     <x>770</x>
-     <y>740</y>
-     <width>85</width>
-     <height>85</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnDecCount">
-   <property name="geometry">
-    <rect>
-     <x>580</x>
-     <y>740</y>
-     <width>85</width>
-     <height>85</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelLight">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>30</y>
-     <width>85</width>
-     <height>85</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnDeleteRoom">
-   <property name="geometry">
-    <rect>
-     <x>290</x>
-     <y>530</y>
-     <width>95</width>
-     <height>95</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>28</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QLabel" name="labelMessage">
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>40</y>
+     <x>660</x>
+     <y>50</y>
      <width>600</width>
      <height>70</height>
     </rect>
@@ -210,78 +65,10 @@ color: rgb(0, 0, 0);</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="labelBtn1">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>240</y>
-     <width>250</width>
-     <height>46</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>16</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-image: url(:/label_long);</string>
-   </property>
-   <property name="text">
-    <string>Создать комнату</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelBtn2">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>470</y>
-     <width>250</width>
-     <height>46</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>16</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-image: url(:/label_long);</string>
-   </property>
-   <property name="text">
-    <string>Удалить комнату</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnPlay">
-   <property name="geometry">
-    <rect>
-     <x>1030</x>
-     <y>310</y>
-     <width>205</width>
-     <height>205</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QLabel" name="labelFrame">
    <property name="geometry">
     <rect>
-     <x>540</x>
+     <x>760</x>
      <y>180</y>
      <width>400</width>
      <height>400</height>
@@ -312,39 +99,234 @@ color: rgb(0, 0, 0);</string>
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="QPushButton" name="btnSendResults">
+   <widget class="QPushButton" name="btnPlay">
     <property name="geometry">
      <rect>
-      <x>990</x>
-      <y>650</y>
-      <width>111</width>
-      <height>61</height>
+      <x>860</x>
+      <y>720</y>
+      <width>205</width>
+      <height>205</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelRoomCount">
+    <property name="geometry">
+     <rect>
+      <x>1370</x>
+      <y>270</y>
+      <width>200</width>
+      <height>46</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/label1);
+color: rgb(0, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string>Число игроков</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnDecCount">
+    <property name="geometry">
+     <rect>
+      <x>1320</x>
+      <y>380</y>
+      <width>85</width>
+      <height>85</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labIndicator_num">
+    <property name="geometry">
+     <rect>
+      <x>1440</x>
+      <y>350</y>
+      <width>60</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labIndicator">
+    <property name="geometry">
+     <rect>
+      <x>1440</x>
+      <y>350</y>
+      <width>60</width>
+      <height>120</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/indicator_off);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnIncCount">
+    <property name="geometry">
+     <rect>
+      <x>1530</x>
+      <y>380</y>
+      <width>85</width>
+      <height>85</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelBtn2">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>480</y>
+      <width>250</width>
+      <height>46</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/label_long);</string>
+    </property>
+    <property name="text">
+     <string>Удалить комнату</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelBtn1">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>290</y>
+      <width>250</width>
+      <height>46</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/label_long);</string>
+    </property>
+    <property name="text">
+     <string>Создать комнату</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnCreateRoom">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>340</y>
+      <width>95</width>
+      <height>95</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>28</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>send Results</string>
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="btnDeleteRoom">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>530</y>
+      <width>95</width>
+      <height>95</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>28</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelLight">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>160</y>
+      <width>85</width>
+      <height>85</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>btnPlay</zorder>
+   <zorder>labelRoomCount</zorder>
+   <zorder>btnDecCount</zorder>
+   <zorder>labIndicator</zorder>
+   <zorder>btnIncCount</zorder>
+   <zorder>labelBtn2</zorder>
+   <zorder>labelBtn1</zorder>
+   <zorder>btnCreateRoom</zorder>
+   <zorder>btnDeleteRoom</zorder>
+   <zorder>labelLight</zorder>
+   <zorder>labIndicator_num</zorder>
   </widget>
   <zorder>frame</zorder>
   <zorder>btnExit</zorder>
-  <zorder>btnCreateRoom</zorder>
-  <zorder>labIndicator</zorder>
-  <zorder>labIndicator_num</zorder>
-  <zorder>labelRoomCount</zorder>
-  <zorder>btnIncCount</zorder>
-  <zorder>btnDecCount</zorder>
-  <zorder>labelLight</zorder>
-  <zorder>btnDeleteRoom</zorder>
   <zorder>labelMessage</zorder>
-  <zorder>labelBtn1</zorder>
-  <zorder>labelBtn2</zorder>
-  <zorder>btnPlay</zorder>
   <zorder>labelFrame</zorder>
   <zorder>listPlayers</zorder>
  </widget>

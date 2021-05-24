@@ -51,5 +51,13 @@
         <file alias="backgroundSteel">images/Background.png</file>
         <file alias="powerON">images/PowerON.png</file>
         <file alias="powerOFF">images/PowerOFF.png</file>
+        <file alias="menuLabel">images/MenuLabel.png</file>
+        <file alias="menuInput">images/menuInput.png</file>
+        <file alias="frameListBig">images/frame_list_big.png</file>
+        <file alias="frameBig">images/frame_big.png</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file alias="19287">fonts/19287.ttf</file>
+        <file alias="20322">fonts/20322.ttf</file>
     </qresource>
 </RCC>

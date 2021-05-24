@@ -1,6 +1,7 @@
 #include "connectwindow.h"
 #include "ui_connectwindow.h"
 #include <QStringListModel>
+#include <QFontDatabase>
 
 static const int WaitRequestInterval = 5 * 1000;
 
@@ -28,7 +29,7 @@ ConnectWindow::ConnectWindow(QWidget *parent, Client *client) : QWidget(parent),
 
 void ConnectWindow::initUi(){
     //ui->labelMessage->setText("You are not connected to the room");
-    ui->labelMessage->setText("Вы не подключены ни к какой из комнат");
+    ui->labelMessage->setText("Вы не подключены к комнате");
     showLight(false);
     ui->btnConnect->setStyleSheet("QPushButton:pressed {background: url(:btnBlackActive);}"
                                            "QPushButton {border: none;"
@@ -39,6 +40,16 @@ void ConnectWindow::initUi(){
     ui->btnExit->setStyleSheet("QPushButton:pressed {background: url(:powerOFF);}"
                                            "QPushButton {border: none;"
                                            "background: url(:powerON);}");
+
+    int id = QFontDatabase::addApplicationFont(":fonts/20322");
+    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+    QFont menuFont(family);
+    menuFont.setPointSize(24);
+    ui->labelMessage->setFont(menuFont);
+    menuFont.setPointSize(20);
+    ui->labelConnect->setFont(menuFont);
+    ui->labelDisconnect->setFont(menuFont);
+
 }
 
 
@@ -123,7 +134,7 @@ void ConnectWindow::btnDisonnectClick(){
     waitFromRoomCode ="";
     waitFromRoomIP = "";
     //ui->labelMessage->setText("You are not connected to the room");
-    ui->labelMessage->setText("Вы не подключены ни к какой из комнат");
+    ui->labelMessage->setText("Вы не подключены к комнате");
     showLight(false);
 }
 
@@ -146,7 +157,7 @@ void ConnectWindow::onPermissionReceived(const QString &from, const QString &id)
         roomName = getRoomName(roomCode, roomIP);
         client->roomname = roomName + "\n" + roomCode + "\n" + roomIP;
         client->userId = id.toInt();
-        ui->labelMessage->setText("connect to room " + roomName + " player ID = " + id);
+        ui->labelMessage->setText("Вы подключены к комнате " + roomName);
         showLight(true);
     }
 }
@@ -167,9 +178,9 @@ void ConnectWindow::onSelectRoom(RoomRecord* record){
 
     for (int i = 0; i < rooms.size(); i++){
         if (rooms.at(i) == currentRoomRecord) {
-            rooms.at(i)->fillBackground("background-color: rgba(0, 0, 0, 0.2); color: rgb(200, 0, 0); font-size: 16pt;");
+            rooms.at(i)->fillBackground("background-color: rgba(0, 0, 0, 0.2); color: rgb(200, 0, 0); font-size: 22pt;");
         } else {
-            rooms.at(i)->fillBackground("background-color: rgba(150, 150, 150, 0.2); color: rgb(0, 0, 0); font-size: 14pt;");
+            rooms.at(i)->fillBackground("background-color: rgba(150, 150, 150, 0.2); color: rgb(0, 0, 0); font-size: 22pt;");
         }
     }
 }
