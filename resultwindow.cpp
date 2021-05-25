@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QFontDatabase>
+#include <QTime>
 
 ResultWindow::ResultWindow(QWidget *parent, Client *client) : QWidget(parent), ui(new Ui::ResultWindow)
 {
@@ -92,6 +93,7 @@ void ResultWindow::updateResultList(){
     for (int step = 0; step < maxStepCount; step++){
         for (ResultRecord* record : client->result) {
             if ((record->playerID == id) && (record->gameStep == step)) {
+                delay(3);
                 if (!record->image.isNull()) { //// image
                     QGraphicsPixmapItem *item = new QGraphicsPixmapItem(QPixmap::fromImage(record->image));
                     QGraphicsScene* scene = new QGraphicsScene;
@@ -108,6 +110,11 @@ void ResultWindow::updateResultList(){
                     QLabel* label = new QLabel;
                     label->setText(record->message);
                     label->setMinimumSize(QSize(600, 30));
+                    int id = QFontDatabase::addApplicationFont(":fonts/20322");
+                    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+                    QFont titleFont(family);
+                    titleFont.setPointSize(24);
+                    label->setFont(titleFont);
                     label->show();
                     ui->resultVbox->addWidget(label);
                     ui->resultAreaWidget->resize(ui->resultAreaWidget->geometry().width(), ui->resultAreaWidget->geometry().height() + 30);
@@ -116,6 +123,12 @@ void ResultWindow::updateResultList(){
         }
         id = getPrevId(id, maxStepCount - 1);
     }
+}
+
+void ResultWindow::delay(int sec){
+    QTime dieTime= QTime::currentTime().addSecs(sec);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
 int ResultWindow::getPrevId(int currentId, int maxId){

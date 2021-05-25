@@ -7,6 +7,7 @@
 #include <createroomwindow.h>
 #include <connectwindow.h>
 #include <resultwindow.h>
+#include <aboutwindow.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MenuWindow; }
@@ -26,6 +27,7 @@ private:
     CreateRoomWindow* createRoomWindow;
     ConnectWindow* connectWindow;
     ResultWindow* resultWindow;
+    AboutWindow* aboutWindow;
     Client* client;
     QString username;
     QString usercode;

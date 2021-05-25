@@ -25,6 +25,7 @@ private:
     void clearResultViews();
     int getPrevId(int currentId, int maxId);
     int getMaxStepCount();
+    void delay(int sec);
 
 public slots:
 

@@ -18,11 +18,13 @@ MenuWindow::MenuWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MenuWi
     createRoomWindow = new CreateRoomWindow(nullptr, client);
     connectWindow = new ConnectWindow(nullptr, client);
     resultWindow = new ResultWindow(nullptr, client);
+    aboutWindow = new AboutWindow(nullptr);
 
     connect(paintWindow, &PaintWindow::toMenuWindow, this, &MenuWindow::showFullScreen);
     connect(createRoomWindow, &CreateRoomWindow::toMenuWindow, this, &MenuWindow::showFullScreen);
     connect(connectWindow, &ConnectWindow::toMenuWindow, this, &MenuWindow::showFullScreen);
     connect(resultWindow, &ResultWindow::toMenuWindow, this, &MenuWindow::showFullScreen);
+    connect(aboutWindow, &AboutWindow::toMenuWindow, this, &MenuWindow::showFullScreen);
     connect(ui->btnCreateRoom, SIGNAL(clicked()), this, SLOT(btnCreateRoomClick()));
     connect(ui->btnConnect, SIGNAL(clicked()), this, SLOT(btnConnectClick()));
     connect(ui->btnAbout, SIGNAL(clicked()), this, SLOT(btnAboutClick()));
@@ -88,8 +90,8 @@ void MenuWindow::btnCreateRoomClick(){
 }
 
 void MenuWindow::btnAboutClick(){
-        //aboutWindow->showFullScreen();
-        //this->close();
+        aboutWindow->showFullScreen();
+        this->close();
 }
 
 void MenuWindow::btnExitClick(){
