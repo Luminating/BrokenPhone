@@ -320,11 +320,9 @@ void Client::commandMessageDecoder(const QString &from, const QString &message){
     }
 
     if (command == "gameMessageResult"){
-        if (isMyRoom(from)){
-            int step = messageList.at(2).toInt();
-            int id = messageList.at(3).toInt();
-            saveMessageToResult(commandPayload, step, id);
-        }
+        int step = messageList.at(2).toInt();
+        int id = messageList.at(3).toInt();
+        saveMessageToResult(commandPayload, step, id);
     }
 
     if (command == "gameStopError") {
@@ -357,11 +355,9 @@ void Client::commandByteArrayDecoder(const QString &from, const QByteArray &arra
     QString command = messageList.at(0);
 
     if (command == "gameImageResult"){
-        if (isMyRoom(from)){
             int step = messageList.at(1).toInt();
             int id = messageList.at(2).toInt();
             emit saveImageToResult(arrayPayload, step, id);
-        }
     }
 
     if (command == "gameShowImage") {
@@ -369,7 +365,6 @@ void Client::commandByteArrayDecoder(const QString &from, const QByteArray &arra
             emit gameShowImage(arrayPayload);
         }
     }
-
 }
 
 void Client::saveImageToResult(const QByteArray &array, const int &step, const int &id){

@@ -81,7 +81,7 @@ void ResultWindow::updateResultList(){
     for (int step = 0; step < maxStepCount; step++){
         for (ResultRecord* record : client->result) {
             if ((record->playerID == id) && (record->gameStep == step)) {
-                delay(3);
+                delay(2);
                 if (!record->image.isNull()) { //// image
                     QGraphicsPixmapItem *item = new QGraphicsPixmapItem(QPixmap::fromImage(record->image));
                     QGraphicsScene* scene = new QGraphicsScene;

@@ -214,7 +214,7 @@ void CreateRoomWindow::nextGameStep(){
     bool isError = false;
     stepTimer.setInterval(1 * 1000);
     if ((stepSecondsLeft < 0) || (returnResultPlayersCount == client->maxPlayerCount)) {
-       // printf("step =%d stepSecondsLeft =%d returnResultPlayersCount =%d\n", client->currentGameStep, stepSecondsLeft, returnResultPlayersCount);
+        //printf("step =%d stepSecondsLeft =%d returnResultPlayersCount =%d\n", client->currentGameStep, stepSecondsLeft, returnResultPlayersCount);
         stepTimer.stop();
         if (returnResultPlayersCount != client->maxPlayerCount){
             //printf("stepBody Error step %d\n", client->currentGameStep);
@@ -226,6 +226,8 @@ void CreateRoomWindow::nextGameStep(){
         stepTimer.start();
     }
 }
+
+
 
 void CreateRoomWindow::stepBody(bool isError){
     if (isError){

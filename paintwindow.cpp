@@ -340,8 +340,8 @@ void PaintWindow::onEndGame(){
 
 void PaintWindow::onStopGameError(const QString &message){
     ui->labMessage->setText(message);
-    printf("1111111111111111111111\n");
-    delay(10);
+    //printf("1111111111111111111111\n");
+    delay(5);
     this->close();
     emit toMenuWindow();
 }
