@@ -23,7 +23,7 @@ RoomRecord* RoomRecord::init(RoomRecord* record, QString initRoomName, QString i
     menuFont.setPointSize(22);
     ui->labName->setFont(menuFont);
     ui->labMaxPlayers->setFont(menuFont);
-     ui->labPlayersCount->setFont(menuFont);
+    ui->labPlayersCount->setFont(menuFont);
     return record;
 }
 

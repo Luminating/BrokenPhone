@@ -13,19 +13,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="btnExit">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>990</y>
-     <width>80</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </widget>
   <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
@@ -83,9 +70,48 @@ color: rgb(25, 25, 25);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLabel" name="labelExit">
+    <property name="geometry">
+     <rect>
+      <x>1680</x>
+      <y>960</y>
+      <width>200</width>
+      <height>46</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/label1);
+color: rgb(0, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string>Выход</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnExit">
+    <property name="geometry">
+     <rect>
+      <x>1570</x>
+      <y>930</y>
+      <width>95</width>
+      <height>95</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
-  <zorder>frame</zorder>
-  <zorder>btnExit</zorder>
  </widget>
  <resources/>
  <connections/>

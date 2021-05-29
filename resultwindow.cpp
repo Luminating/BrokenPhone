@@ -28,7 +28,9 @@ void ResultWindow::initUi(){
     ui->btnUpdate->setStyleSheet("QPushButton:pressed {background: url(:btnBlackActive);}"
                                            "QPushButton {border: none;"
                                            "background: url(:btnBlackInactive);}");
-
+    ui->btnExit->setStyleSheet("QPushButton:pressed {background: url(:btnRedActive);}"
+                                           "QPushButton {border: none;"
+                                           "background: url(:btnRedInactive);}");
     int id = QFontDatabase::addApplicationFont(":fonts/19287");
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
     QFont titleFont(family);
@@ -37,12 +39,12 @@ void ResultWindow::initUi(){
 
     id = QFontDatabase::addApplicationFont(":fonts/20322");
     family = QFontDatabase::applicationFontFamilies(id).at(0);
-    QFont menuFont(family);
-    menuFont.setPointSize(22);
-    ui->labelCount->setFont(menuFont);
-    ui->labelShow->setFont(menuFont);
-
-
+    QFont labelFont(family);
+    labelFont.setPointSize(22);
+    ui->labelCount->setFont(labelFont);
+    ui->labelShow->setFont(labelFont);
+    labelFont.setPointSize(20);
+    ui->labelExit->setFont(labelFont);
 }
 
 ResultWindow::~ResultWindow()
@@ -75,20 +77,6 @@ void ResultWindow::updateResultList(){
     clearResultViews();
     int id = fork;
     int maxStepCount = getMaxStepCount() + 1;
-
-/*
-    printf("*ResultRecord*start\n");
-    int count = 0;
-    for (ResultRecord* record : client->result){
-        count++;
-        if (record->image.isNull()){
-            printf("message id =%d, step=%d\n", record->playerID, record->gameStep);
-        } else {
-            printf("image id =%d, step=%d\n", record->playerID, record->gameStep);
-        }
-    }
-    printf("*ResultRecord*end count =%d\n", count);
-*/
 
     for (int step = 0; step < maxStepCount; step++){
         for (ResultRecord* record : client->result) {

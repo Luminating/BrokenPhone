@@ -13,19 +13,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="btnExit">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>1020</y>
-     <width>80</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </widget>
   <widget class="QListView" name="listPlayers">
    <property name="geometry">
     <rect>
@@ -39,6 +26,9 @@
     <font>
      <pointsize>14</pointsize>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/wallpaper);</string>
    </property>
   </widget>
   <widget class="QLabel" name="labelMessage">
@@ -205,7 +195,7 @@ color: rgb(0, 0, 0);</string>
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>480</y>
+      <y>400</y>
       <width>250</width>
       <height>46</height>
      </rect>
@@ -231,7 +221,7 @@ color: rgb(0, 0, 0);</string>
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>290</y>
+      <y>200</y>
       <width>250</width>
       <height>46</height>
      </rect>
@@ -257,7 +247,7 @@ color: rgb(0, 0, 0);</string>
     <property name="geometry">
      <rect>
       <x>410</x>
-      <y>340</y>
+      <y>260</y>
       <width>95</width>
       <height>95</height>
      </rect>
@@ -280,7 +270,7 @@ color: rgb(0, 0, 0);</string>
     <property name="geometry">
      <rect>
       <x>410</x>
-      <y>530</y>
+      <y>460</y>
       <width>95</width>
       <height>95</height>
      </rect>
@@ -303,13 +293,54 @@ color: rgb(0, 0, 0);</string>
     <property name="geometry">
      <rect>
       <x>420</x>
-      <y>160</y>
+      <y>40</y>
       <width>85</width>
       <height>85</height>
      </rect>
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnExit">
+    <property name="geometry">
+     <rect>
+      <x>1580</x>
+      <y>920</y>
+      <width>95</width>
+      <height>95</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelExit">
+    <property name="geometry">
+     <rect>
+      <x>1690</x>
+      <y>940</y>
+      <width>200</width>
+      <height>46</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/label1);
+color: rgb(0, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string>Выход</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <zorder>btnPlay</zorder>
@@ -323,9 +354,10 @@ color: rgb(0, 0, 0);</string>
    <zorder>btnDeleteRoom</zorder>
    <zorder>labelLight</zorder>
    <zorder>labIndicator_num</zorder>
+   <zorder>btnExit</zorder>
+   <zorder>labelExit</zorder>
   </widget>
   <zorder>frame</zorder>
-  <zorder>btnExit</zorder>
   <zorder>labelMessage</zorder>
   <zorder>labelFrame</zorder>
   <zorder>listPlayers</zorder>

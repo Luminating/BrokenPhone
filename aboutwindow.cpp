@@ -20,16 +20,20 @@ void AboutWindow::initUi(){
     QFont titleFont(family);
     titleFont.setPointSize(26);
     ui->label->setFont(titleFont);
+    titleFont.setPointSize(20);
+    ui->labelExit->setFont(titleFont);
     id = QFontDatabase::addApplicationFont(":fonts/19287");
     family = QFontDatabase::applicationFontFamilies(id).at(0);
     QFont menuFont(family);
     menuFont.setPointSize(30);
     ui->labelTitle->setFont(menuFont);
 
+    ui->btnExit->setStyleSheet("QPushButton:pressed {background: url(:btnRedActive);}"
+                                           "QPushButton {border: none;"
+                                           "background: url(:btnRedInactive);}");
 }
 
-AboutWindow::~AboutWindow()
-{
+AboutWindow::~AboutWindow(){
     delete ui;
 }
 

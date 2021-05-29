@@ -22,14 +22,14 @@ public:
     QString username;
     QString userstatus;
     QString roomname;
-    int userId;
+    int userId = -1;
     void sendMessage(const QString &message);
     void sendByteArray(const QByteArray &array);
     void sendMessageTo(const QString &sendercode, const QString &senderIP, const QString &message);
     void sendByteArrayTo(const QString &sendercode, const QString &senderIP, const QByteArray &array);
     void startSendStatus();
     void stopSendStatus();
-    QString nickName() const;    
+    QString nickName() const;       ///////// ??? del
     bool hasConnection(const QHostAddress &senderIp, int senderPort = -1) const;
     QList<Player*> playerList;
     QList<Player*> playersInRoom;
@@ -41,19 +41,21 @@ public:
     QByteArray commandToByteArray(const QString &command, const QByteArray &array);
 
 signals:
-    void newMessage(const QString &from, const QString &message);  //////// ?????
-    void newParticipant(const QString &nick);
-    void participantLeft(const QString &nick);
+    void newMessage(const QString &from, const QString &message);  //////// ????? del
+    void newParticipant(const QString &nick);  /////////////??????? del
+    void participantLeft(const QString &nick); ////////////?????
     void updatePlayers();
     void requestConnectToRoom(const QString &from);
     void permissionConnectToRoom(const QString &from, const QString &id);
-    void startGame(const QString &from);
-    void nextGameStep(const QString &from);
-    void endGame(const QString &from);
-    void setGameStep(const QString &from, const QString &gameStep);
-    void gameShowImage(const QString &from, const QByteArray &array);
-    void gameShowMessage(const QString &from, const QString &message);
+    void deleteRoom();
+    void startGame();
+    void nextGameStep();
+    void endGame();
+    void setGameStep(const QString &gameStep);
+    void gameShowImage(const QByteArray &array);
+    void gameShowMessage(const QString &message);
     void disconnectFromRoom(const QString &from);
+    void stopGameError(const QString &message);
 
 private slots:
     void newConnection(Connection *connection);
@@ -62,8 +64,8 @@ private slots:
     void readyForUse();
     void commandMessageDecoder(const QString &from, const QString &message);
     void commandByteArrayDecoder(const QString &from, const QByteArray &array);
-    void saveImageToResult(const QString &from, const QByteArray &array, const int &step, const int &id);
-    void saveMessageToResult(const QString &from, const QString &message, const int &step, const int &id);
+    void saveImageToResult(const QByteArray &array, const int &step, const int &id);
+    void saveMessageToResult(const QString &message, const int &step, const int &id);
 
 private:
     void removeConnection(Connection *connection);
@@ -73,7 +75,10 @@ private:
     Server server;
     QMultiHash<QHostAddress, Connection *> peers;
     bool isPlayerPresent(const QString &usercode, const QString &userIP);
+    bool isPlayerInRoomPresent(const QString &user);
     QString byteArrayToCommand(const QByteArray &array);
+    bool isMyRoom(const QString &from);
+    void removeFromLists(const QString &playername);
 };
 
 #endif

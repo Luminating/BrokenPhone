@@ -37,6 +37,9 @@
    <property name="text">
     <string>Exit</string>
    </property>
+   <property name="flat">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QGroupBox" name="groupBoxColor">
    <property name="geometry">
@@ -353,7 +356,7 @@ background-image: url(:/messageBox);</string>
      <string notr="true">background-image: url(:/label1);</string>
     </property>
     <property name="text">
-     <string>Отмена</string>
+     <string>Удалить</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -377,7 +380,7 @@ background-image: url(:/messageBox);</string>
      <string notr="true">background-image: url(:/label1);</string>
     </property>
     <property name="text">
-     <string>Возврат</string>
+     <string>Возвратить</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>

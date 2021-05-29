@@ -4,6 +4,7 @@
 #include <QBuffer>
 #include <QMutableListIterator>
 #include <QFontDatabase>
+#include <QTime>
 
 static const int MaxGameStepInterval = 1 * 60 + 10;  // in sec
 
@@ -14,6 +15,7 @@ CreateRoomWindow::CreateRoomWindow(QWidget *parent, Client *client) : QWidget(pa
     this->client = client;
     connect(ui->btnExit, SIGNAL(clicked()), this, SLOT(btnExitClick()));
     connect(ui->btnCreateRoom, SIGNAL(clicked()), this, SLOT(btnCreateRoomClick()));
+    connect(ui->btnDeleteRoom, SIGNAL(clicked()), this, SLOT(btnDeleteRoomClick()));
     connect(client, SIGNAL(updatePlayers()), this, SLOT(updatePlayerList()));
     connect(client, SIGNAL(requestConnectToRoom(QString)), this, SLOT(permissionConnectToRoom(QString)));
     connect(client, SIGNAL(disconnectFromRoom(QString)), this, SLOT(disconnectFromRoom(QString)));
@@ -29,6 +31,7 @@ CreateRoomWindow::CreateRoomWindow(QWidget *parent, Client *client) : QWidget(pa
     ui->labelMessage->setText("Комната " + client->username.split("\n").at(0));
     showIndicator(client->maxPlayerCount);
     showLight(false);
+
 }
 
 void CreateRoomWindow::initUi(){
@@ -47,18 +50,22 @@ void CreateRoomWindow::initUi(){
     ui->btnPlay->setStyleSheet("QPushButton:pressed {background: url(:btnPlayActive);}"
                                            "QPushButton {border: none;"
                                            "background: url(:btnPlayInactive);}");
+    ui->btnExit->setStyleSheet("QPushButton:pressed {background: url(:btnRedActive);}"
+                                           "QPushButton {border: none;"
+                                           "background: url(:btnRedInactive);}");
 
     int id = QFontDatabase::addApplicationFont(":fonts/20322");
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
-    QFont menuFont(family);
-    menuFont.setPointSize(26);
-    ui->listPlayers->setFont(menuFont);
-    ui->labelMessage->setFont(menuFont);
-    menuFont.setPointSize(20);
-    ui->labelBtn1->setFont(menuFont);
-    ui->labelBtn2->setFont(menuFont);
-    menuFont.setPointSize(18);
-    ui->labelRoomCount->setFont(menuFont);
+    QFont labelFont(family);
+    labelFont.setPointSize(26);
+    ui->listPlayers->setFont(labelFont);
+    ui->labelMessage->setFont(labelFont);
+    labelFont.setPointSize(20);
+    ui->labelBtn1->setFont(labelFont);
+    ui->labelBtn2->setFont(labelFont);
+    ui->labelExit->setFont(labelFont);
+    labelFont.setPointSize(18);
+    ui->labelRoomCount->setFont(labelFont);
 
 }
 
@@ -68,23 +75,7 @@ CreateRoomWindow::~CreateRoomWindow()
     delete ui;
 }
 
-
-void CreateRoomWindow::btnExitClick(){
-    this->close();
-    emit toMenuWindow();
-}
-
 void CreateRoomWindow::updatePlayerList(){
-    /*
-    showUsername();
-    QStringList playersList;
-    for (Player* player: client->playerList){
-        playersList.append(player->username + "|" + player->usercode + "|" + player->userIP + "|" + player->userstatus + "|" + player->roomUsername);
-    }
-    QStringListModel* stringListModel = new QStringListModel;
-    stringListModel->setStringList(playersList);
-    ui->listPlayers->setModel(stringListModel);
-    */
     ui->labelMessage->setText("Комната " + client->username.split("\n").at(0));
     QStringList playersList;
     for (Player* player: client->playersInRoom){
@@ -93,7 +84,6 @@ void CreateRoomWindow::updatePlayerList(){
     QStringListModel* stringListModel = new QStringListModel;
     stringListModel->setStringList(playersList);
     ui->listPlayers->setModel(stringListModel);
-
 }
 
 QString CreateRoomWindow::getPlayerName(const QString &code, const QString &IP){
@@ -105,7 +95,6 @@ QString CreateRoomWindow::getPlayerName(const QString &code, const QString &IP){
     }
     return name;
 }
-
 
 void CreateRoomWindow::permissionConnectToRoom(const QString &username){
     int id = getNextPlayerId();
@@ -157,13 +146,26 @@ int CreateRoomWindow::getNextPlayerId(){
     return id;
 }
 
-
 void CreateRoomWindow::btnCreateRoomClick(){
-    if (client->userstatus.left(4) == "Room") return;
-    showLight(true);
+    if (client->userstatus.left(4) == "Room") return;    
     client->userstatus = "Room0/" + QString::number(client->maxPlayerCount);
     client->playersInRoom.clear();
+    showLight(true);
 }
+
+void CreateRoomWindow::btnDeleteRoomClick(){
+    if (client->userstatus.left(4) != "Room") return;
+    if (client->isPlayGame) return;
+    for(Player* player : client->playersInRoom){
+        QString message = "deleteRoom\n\n";
+        client->sendMessageTo(player->usercode, player->userIP, message);
+    }
+
+    client->userstatus = "None";
+    client->playersInRoom.clear();
+    showLight(false);
+}
+
 
 void CreateRoomWindow::btnIncCountClick(){
     if (client->maxPlayerCount < 9) {
@@ -194,6 +196,11 @@ void CreateRoomWindow::showLight(bool isOn){
     }
 }
 
+void CreateRoomWindow::delay(int sec){
+    QTime dieTime= QTime::currentTime().addSecs(sec);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
 
 void CreateRoomWindow::nextGameStep(){
     stepSecondsLeft--;
@@ -207,10 +214,11 @@ void CreateRoomWindow::nextGameStep(){
     bool isError = false;
     stepTimer.setInterval(1 * 1000);
     if ((stepSecondsLeft < 0) || (returnResultPlayersCount == client->maxPlayerCount)) {
-        printf("step =%d stepSecondsLeft =%d returnResultPlayersCount =%d\n", client->currentGameStep, stepSecondsLeft, returnResultPlayersCount);
+       // printf("step =%d stepSecondsLeft =%d returnResultPlayersCount =%d\n", client->currentGameStep, stepSecondsLeft, returnResultPlayersCount);
         stepTimer.stop();
         if (returnResultPlayersCount != client->maxPlayerCount){
-            printf("stepBody Error step %d\n", client->currentGameStep);
+            //printf("stepBody Error step %d\n", client->currentGameStep);
+
             isError = true;
         }
         stepBody(isError);
@@ -221,7 +229,12 @@ void CreateRoomWindow::nextGameStep(){
 
 void CreateRoomWindow::stepBody(bool isError){
     if (isError){
-        //printf("stepBody Error\n");
+        ui->labelMessage->setText("Ошибка: отключился игрок");
+        for(Player* player : client->playersInRoom){
+            QString message = "gameStopError\nИграть дальше нельзя, отключился игрок";
+            client->sendMessageTo(player->usercode, player->userIP, message);
+        }
+        client->isPlayGame = false;
         return;
     }
 
@@ -264,10 +277,10 @@ void CreateRoomWindow::stepBody(bool isError){
     }
 }
 
-
 void CreateRoomWindow::endGame(){
     isGameOver = true;
-    printf("Game Over\n");
+
+   // printf("Game Over\n");
     for(Player* player : client->playersInRoom){  /// send to all results
         for(ResultRecord* record : client->result){
             if (!record->image.isNull()) { //// image
@@ -289,12 +302,11 @@ void CreateRoomWindow::endGame(){
         QString message = "endGame\n\n";
         client->sendMessageTo(player->usercode, player->userIP, message);
     }
-
+    client->isPlayGame = false;
     //// end, goto ??? Window
 
 
 }
-
 
 int CreateRoomWindow::getNextId(int currentId){
     int result = currentId;
@@ -307,6 +319,15 @@ int CreateRoomWindow::getNextId(int currentId){
 }
 
 void CreateRoomWindow::btnPlayClick(){
+    if (client->maxPlayerCount != client->playersInRoom.size()){
+        QString temp = ui->labelMessage->text();
+        ui->labelMessage->setText("Недостаточно подключено игроков");
+        delay(2);
+        ui->labelMessage->setText(temp);
+        return;
+    }
+    if (client->isPlayGame) return;
+    client->isPlayGame = true;
     for(Player* player : client->playersInRoom) {
         QString message = "gameShowMessage\nНачинаем игру - введите фразу и нажмите ГОТОВО";
         client->sendMessageTo(player->usercode, player->userIP, message);
@@ -327,5 +348,17 @@ void CreateRoomWindow::btnPlayClick(){
         isGameOver = false;
         stepSecondsLeft = MaxGameStepInterval;
         nextGameStep();
+    }
+}
+
+void CreateRoomWindow::btnExitClick(){
+    if (client->userstatus.left(4) != "Room"){
+        this->close();
+        emit toMenuWindow();
+    } else {
+        QString temp = ui->labelMessage->text();
+        ui->labelMessage->setText("Для выхода - удалите комнату");
+        delay(2);
+        ui->labelMessage->setText(temp);
     }
 }

@@ -56,6 +56,7 @@
         <file alias="frameListBig">images/frame_list_big.png</file>
         <file alias="frameBig">images/frame_big.png</file>
         <file alias="aboutFrame">images/aboutFrame.png</file>
+        <file alias="wallpaper">images/wallpaper.png</file>
     </qresource>
     <qresource prefix="/fonts">
         <file alias="19287">fonts/19287.ttf</file>

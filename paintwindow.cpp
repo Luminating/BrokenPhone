@@ -6,6 +6,7 @@
 #include <QGraphicsView>
 #include <QBuffer>
 #include <QDir>
+#include <QTime>
 
 static const int GameStepInterval = 1 * 60; /// 1 min
 
@@ -22,11 +23,12 @@ PaintWindow::PaintWindow(QWidget *parent, Client *client) : QWidget(parent), ui(
     connect(ui->btnSetFoneColor, SIGNAL(pressed()), this, SLOT(btnSetFoneColorClick()));
     connect(&indicatorTimer, SIGNAL(timeout()), this, SLOT(startTimeIndicator()));
 
-    connect(client, SIGNAL(startGame(QString)), this, SLOT(onStartGame(QString)));
-    connect(client, SIGNAL(nextGameStep(QString)), this, SLOT(onNextGameStep(QString)));
-    connect(client, SIGNAL(gameShowImage(QString, QByteArray)), this, SLOT(onGameShowImage(QString, QByteArray)));
-    connect(client, SIGNAL(gameShowMessage(QString, QString)), this, SLOT(onGameShowMessage(QString, QString)));
-    connect(client, SIGNAL(endGame(QString)), this, SLOT(onEndGame(QString)));
+    connect(client, SIGNAL(startGame()), this, SLOT(onStartGame()));
+    connect(client, SIGNAL(nextGameStep()), this, SLOT(onNextGameStep()));
+    connect(client, SIGNAL(gameShowImage(QByteArray)), this, SLOT(onGameShowImage(QByteArray)));
+    connect(client, SIGNAL(gameShowMessage(QString)), this, SLOT(onGameShowMessage(QString)));
+    connect(client, SIGNAL(endGame()), this, SLOT(onEndGame()));
+    connect(client, SIGNAL(stopGameError(QString)), this, SLOT(onStopGameError(QString)));
 
     stepSecondsLeft = GameStepInterval;
     indicatorTimer.setInterval(1 * 1000);
@@ -157,9 +159,15 @@ PaintWindow::~PaintWindow()
     delete ui;
 }
 
-void PaintWindow::btnExitClick(){
+void PaintWindow::btnExitClick(){ //// del
     this->close();
     emit toMenuWindow();
+}
+
+void PaintWindow::delay(int sec){
+    QTime dieTime= QTime::currentTime().addSecs(sec);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 
 void PaintWindow::btnSetFoneColorClick(){
@@ -286,7 +294,7 @@ void PaintWindow::startTimeIndicator(){
     }
 }
 
-void PaintWindow::onStartGame(const QString &from){
+void PaintWindow::onStartGame(){
     client->currentGameStep = 0;
     stepSecondsLeft = GameStepInterval;
     isPressedTurnEnd = false;
@@ -294,14 +302,14 @@ void PaintWindow::onStartGame(const QString &from){
 
 }
 
-void PaintWindow::onNextGameStep(const QString &from){
+void PaintWindow::onNextGameStep(){
     stepSecondsLeft = GameStepInterval;
     isPressedTurnEnd = false;
     startTimeIndicator();
 }
 
 
-void PaintWindow::onGameShowImage(const QString &from, const QByteArray &array){
+void PaintWindow::onGameShowImage(const QByteArray &array){
     QImage image;
     image.loadFromData(array, "PNG");
 
@@ -319,13 +327,21 @@ void PaintWindow::onGameShowImage(const QString &from, const QByteArray &array){
 }
 
 
-void PaintWindow::onGameShowMessage(const QString &from, const QString &message){
+void PaintWindow::onGameShowMessage(const QString &message){
     graphicsView->setScene(paintscene);
     ui->labMessage->setText("Нарисуйте: " + message);
     ui->lineEdit->setText("");
     ui->lineEdit->setReadOnly(true);
 }
 
-void PaintWindow::onEndGame(const QString &from){
+void PaintWindow::onEndGame(){
     this->close();
+}
+
+void PaintWindow::onStopGameError(const QString &message){
+    ui->labMessage->setText(message);
+    printf("1111111111111111111111\n");
+    delay(10);
+    this->close();
+    emit toMenuWindow();
 }

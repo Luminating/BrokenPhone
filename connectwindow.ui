@@ -25,6 +25,8 @@
    <property name="font">
     <font>
      <pointsize>12</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
     </font>
    </property>
    <property name="text">
@@ -58,6 +60,9 @@
      <height>398</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/wallpaper);</string>
+   </property>
    <property name="verticalScrollBarPolicy">
     <enum>Qt::ScrollBarAsNeeded</enum>
    </property>
@@ -89,7 +94,7 @@
      </sizepolicy>
     </property>
     <property name="autoFillBackground">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <widget class="QWidget" name="verticalLayoutWidget">
      <property name="geometry">
@@ -148,7 +153,7 @@
    <widget class="QLabel" name="labelMessage">
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>660</x>
       <y>80</y>
       <width>600</width>
       <height>70</height>
@@ -199,7 +204,7 @@
     <property name="geometry">
      <rect>
       <x>290</x>
-      <y>160</y>
+      <y>80</y>
       <width>85</width>
       <height>85</height>
      </rect>
@@ -269,10 +274,10 @@
    <widget class="QPushButton" name="btnExit">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>900</y>
-      <width>100</width>
-      <height>130</height>
+      <x>1570</x>
+      <y>920</y>
+      <width>95</width>
+      <height>95</height>
      </rect>
     </property>
     <property name="text">
@@ -282,12 +287,37 @@
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="labelExit">
+    <property name="geometry">
+     <rect>
+      <x>1680</x>
+      <y>950</y>
+      <width>200</width>
+      <height>46</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/label1);
+color: rgb(0, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string>Выход</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
   </widget>
-  <zorder>labUserName</zorder>
   <zorder>label</zorder>
   <zorder>frame</zorder>
   <zorder>labelFrame</zorder>
   <zorder>scrollArea</zorder>
+  <zorder>labUserName</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -55,7 +55,7 @@
     <bool>false</bool>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+    <string notr="true">background:transparent;</string>
    </property>
    <property name="text">
     <string/>
@@ -89,7 +89,7 @@
     <bool>false</bool>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+    <string notr="true">background:transparent;</string>
    </property>
    <property name="text">
     <string/>
@@ -116,7 +116,7 @@
     <bool>false</bool>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+    <string notr="true">background:transparent;</string>
    </property>
    <property name="text">
     <string/>
@@ -140,7 +140,7 @@
     <bool>false</bool>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+    <string notr="true">background:transparent;</string>
    </property>
    <property name="frameShadow">
     <enum>QFrame::Plain</enum>
@@ -152,6 +152,10 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <zorder>labPlayersCount</zorder>
+  <zorder>labMaxPlayers</zorder>
+  <zorder>labName</zorder>
+  <zorder>btnRecord</zorder>
  </widget>
  <resources/>
  <connections/>

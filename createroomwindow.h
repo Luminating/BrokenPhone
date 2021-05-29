@@ -19,16 +19,18 @@ private:
     Ui::CreateRoomWindow *ui;
     Client *client;
     int getNextPlayerId();
+    QTimer stepTimer;
+    int stepSecondsLeft;
+    bool isGameOver;
     void initUi();
     void showIndicator(int number);
     void showLight(bool isOn);
-    QString getPlayerName(const QString &code, const QString &IP);
-    QTimer stepTimer;
-    int stepSecondsLeft;
+    QString getPlayerName(const QString &code, const QString &IP);    
     void stepBody(bool isError);
     int getNextId(int currentId);
     void endGame();
-    bool isGameOver;
+    void delay(int sec);
+
 
 public slots:
     void updatePlayerList();
@@ -36,6 +38,7 @@ public slots:
 private slots:
     void btnExitClick();
     void btnCreateRoomClick();
+    void btnDeleteRoomClick();
     void permissionConnectToRoom(const QString &username);
     void disconnectFromRoom(const QString &username);
     void btnIncCountClick();

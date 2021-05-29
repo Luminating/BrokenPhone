@@ -19,14 +19,11 @@ public:
 private:
     Ui::ConnectWindow *ui;
     Client *client;
-    QString roomName;
-    QString roomCode;
-    QString roomIP;
-
+    QString selectedRecordName;
+    QString selectedRecordCode;
+    QString selectedRecordIP;
     QString waitFromRoomCode;
     QString waitFromRoomIP;
-
-    RoomRecord* currentRoomRecord = NULL;
     QList<RoomRecord*> rooms;
     bool isWaitRequest;
     QTimer requestTimer;
@@ -34,8 +31,8 @@ private:
     void showUsername();
     void showLight(bool isOn);
     void clearRooms();
+    void delay(int sec);
     QString getRoomName(const QString &code, const QString &IP);
-
 
 public slots:
     void updatePlayerList();
@@ -43,11 +40,12 @@ public slots:
 private slots:
     void btnExitClick();
     void btnConnectClick();
-    void btnDisonnectClick();
+    void btnDisconnectClick();
     void onSelectRoom(RoomRecord* record);
     void requestTimerTimeout();
     void onPermissionReceived(const QString &from, const QString &id);
-    void onStartGame(const QString &from);
+    void onDeleteRoom();
+    void onStartGame();
 
 signals:
     void toMenuWindow();

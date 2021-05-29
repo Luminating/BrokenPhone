@@ -32,8 +32,8 @@ MenuWindow::MenuWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MenuWi
     connect(ui->btnResult, SIGNAL(clicked()), this, SLOT(btnResultClick()));  ////  delete
     connect(ui->btnPaint, SIGNAL(clicked()), this, SLOT(btnPaintClick()));  ////  delete
     connect(ui->editUsername, SIGNAL(returnPressed()), this, SLOT(changeUserName()));
-    connect(client, SIGNAL(startGame(QString)), this, SLOT(onStartGame(QString)));
-    connect(client, SIGNAL(endGame(QString)), this, SLOT(onEndGame(QString)));
+    connect(client, SIGNAL(startGame()), this, SLOT(onStartGame()));
+    connect(client, SIGNAL(endGame()), this, SLOT(onEndGame()));
 }
 
 
@@ -113,10 +113,10 @@ void MenuWindow::btnPaintClick(){  //// delete
         this->close();
 }
 
-void MenuWindow::onStartGame(const QString &from){
+void MenuWindow::onStartGame(){
     paintWindow->showFullScreen();
 }
 
-void MenuWindow::onEndGame(const QString &from){
+void MenuWindow::onEndGame(){
     resultWindow->showFullScreen();
 }

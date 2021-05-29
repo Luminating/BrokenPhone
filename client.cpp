@@ -1,13 +1,11 @@
 #include <QtNetwork>
-
 #include "client.h"
 #include "connection.h"
 #include "peermanager.h"
 
 static const qint32 sendStatusInterval = 2000;
 
-Client::Client(const QString &username)
-{
+Client::Client(const QString &username){
     this->username = username;
     peerManager = new PeerManager(this);
     peerManager->setServerPort(server.serverPort());
@@ -20,8 +18,7 @@ Client::Client(const QString &username)
     connect(&server, &Server::newConnection, this, &Client::newConnection);
 }
 
-void Client::sendMessage(const QString &message)
-{
+void Client::sendMessage(const QString &message){  // ?????
     if (message.isEmpty())
         return;
 
@@ -31,8 +28,7 @@ void Client::sendMessage(const QString &message)
         }
 }
 
-void Client::sendByteArray(const QByteArray &array) // ++++
-{
+void Client::sendByteArray(const QByteArray &array){ // ??????
     if (array.isEmpty())
         return;
 
@@ -66,8 +62,7 @@ bool Client::hasConnection(const QHostAddress &senderIp, int senderPort) const
     return false;
 }
 
-void Client::newConnection(Connection *connection)
-{
+void Client::newConnection(Connection *connection){
     connection->setGreetingMessage(peerManager->userName());
 
     connect(connection, &Connection::errorOccurred, this, &Client::connectionError);
@@ -75,8 +70,7 @@ void Client::newConnection(Connection *connection)
     connect(connection, &Connection::readyForUse, this, &Client::readyForUse);
 }
 
-void Client::readyForUse()
-{
+void Client::readyForUse(){
     Connection *connection = qobject_cast<Connection *>(sender());
     if (!connection || hasConnection(connection->peerAddress(), connection->peerPort())) return;
 
@@ -100,28 +94,56 @@ void Client::readyForUse()
     if (!nick.isEmpty()) emit newParticipant(nick);
 }
 
-void Client::disconnected()
-{
+void Client::disconnected(){
     if (Connection *connection = qobject_cast<Connection *>(sender()))
         removeConnection(connection);
 }
 
-void Client::connectionError(QAbstractSocket::SocketError /* socketError */)
-{
+void Client::connectionError(QAbstractSocket::SocketError /* socketError */){
     if (Connection *connection = qobject_cast<Connection *>(sender()))
         removeConnection(connection);
 }
 
-void Client::removeConnection(Connection *connection)
-{
+void Client::removeConnection(Connection *connection){
     if (peers.contains(connection->peerAddress())) {
         peers.remove(connection->peerAddress());
-        QString nick = connection->name();
-        if (!nick.isEmpty())
-            emit participantLeft(nick);
+
+        QString playername = connection->name();
+        removeFromLists(playername);
+        emit updatePlayers();
+
+        if (!isPlayGame){
+            if (isMyRoom(playername)){ // disconnect room
+                emit deleteRoom();
+            } else if (isPlayerInRoomPresent(playername)) { // disconnect player
+                emit disconnectFromRoom(playername);
+            }
+        }
     }
     connection->deleteLater();
 }
+
+void Client::removeFromLists(const QString &playername){
+    if (playername.split("\n").size() > 2){
+        QString playerCode = playername.split("\n").at(1);
+        QString playerIP = playername.split("\n").at(2);
+        QMutableListIterator<Player*> playerInRoom(playersInRoom);
+        while (playerInRoom.hasNext()) {
+            Player* currPlayer = playerInRoom.next();
+            if ((currPlayer->usercode == playerCode) && (currPlayer->userIP == playerIP)){
+                playerInRoom.remove();
+            }
+        }
+        QMutableListIterator<Player*> player(playerList);
+        while (player.hasNext()) {
+            Player* currPlayer = player.next();
+            if ((currPlayer->usercode == playerCode) && (currPlayer->userIP == playerIP)){
+                player.remove();
+            }
+        }
+    }
+}
+
 
 bool Client::isPlayerPresent(const QString &usercode, const QString &userIP){
     bool isPresent = false;
@@ -133,9 +155,21 @@ bool Client::isPlayerPresent(const QString &usercode, const QString &userIP){
     return isPresent;
 }
 
+bool Client::isPlayerInRoomPresent(const QString &user){
+    bool result = false;
+    if (user.split("\n").size() > 2){
+        QString playerCode = user.split("\n").at(1);
+        QString playerIP = user.split("\n").at(2);
+        for (Player* player : playersInRoom){
+            if ((player->usercode == playerCode) && (player->userIP == playerIP)){
+                return true;
+            }
+        }
+    }
+    return result;
+}
 
 void Client::sendPlayersData(){
-
     for (Connection *connection : qAsConst(peers)) {
         if (connection->localPort() == server.serverPort()) {
             connection->sendMessage("setPlayerStatus\n" + userstatus);
@@ -171,6 +205,16 @@ void Client::sendByteArrayTo(const QString &sendercode, const QString &senderIP,
             connection->sendByteArray(array);
         }
     }
+}
+
+bool Client::isMyRoom(const QString &from){
+    bool result = false;
+    if ((roomname.split("\n").size() > 2) && (from.split("\n").size() > 2)){
+        if ((roomname.split("\n").at(1) == from.split("\n").at(1)) && (roomname.split("\n").at(2) == from.split("\n").at(2))){
+            result = true;
+        }
+    }
+    return result;
 }
 
 void Client::commandMessageDecoder(const QString &from, const QString &message){
@@ -236,31 +280,57 @@ void Client::commandMessageDecoder(const QString &from, const QString &message){
         emit disconnectFromRoom(from);
     }
 
-    if (command == "gameMessageResult"){
-        int step = messageList.at(2).toInt();
-        int id = messageList.at(3).toInt();
-        saveMessageToResult(from, commandPayload, step, id);
+    if (command == "deleteRoom"){
+        if (isMyRoom(from)){
+            emit deleteRoom();
+        }
     }
 
     if (command == "startGame"){
-        emit startGame(from);
+        if (isMyRoom(from)){
+            isPlayGame = true;
+            emit startGame();
+        }
     }
 
     if (command == "endGame"){
-        emit endGame(from);
+        if (isMyRoom(from)){
+            isPlayGame = false;
+            emit endGame();
+        }
     }
 
     if (command == "setGameStep") {
-        currentGameStep = commandPayload.toInt();
-        emit setGameStep(from, commandPayload);
-    }
-
-    if (command == "gameShowMessage") {
-        emit gameShowMessage(from, commandPayload);
+        if (isMyRoom(from)){
+            currentGameStep = commandPayload.toInt();
+            emit setGameStep(commandPayload);  /////////////????????
+        }
     }
 
     if (command == "nextGameStep"){
-        emit nextGameStep(from);
+        if (isMyRoom(from)){
+            emit nextGameStep();
+        }
+    }
+
+    if (command == "gameShowMessage") {
+        if (isMyRoom(from)){
+            emit gameShowMessage(commandPayload);
+        }
+    }
+
+    if (command == "gameMessageResult"){
+        if (isMyRoom(from)){
+            int step = messageList.at(2).toInt();
+            int id = messageList.at(3).toInt();
+            saveMessageToResult(commandPayload, step, id);
+        }
+    }
+
+    if (command == "gameStopError") {
+        if (isMyRoom(from)){
+            emit stopGameError(commandPayload);
+        }
     }
 }
 
@@ -287,34 +357,38 @@ void Client::commandByteArrayDecoder(const QString &from, const QByteArray &arra
     QString command = messageList.at(0);
 
     if (command == "gameImageResult"){
-        int step = messageList.at(1).toInt();
-        int id = messageList.at(2).toInt();
-        emit saveImageToResult(from, arrayPayload, step, id);
+        if (isMyRoom(from)){
+            int step = messageList.at(1).toInt();
+            int id = messageList.at(2).toInt();
+            emit saveImageToResult(arrayPayload, step, id);
+        }
     }
 
     if (command == "gameShowImage") {
-        emit gameShowImage(from, arrayPayload);
+        if (isMyRoom(from)){
+            emit gameShowImage(arrayPayload);
+        }
     }
 
 }
 
-void Client::saveImageToResult(const QString &from, const QByteArray &array, const int &step, const int &id){
-        ResultRecord* record = new ResultRecord;
-        QImage image;
-        image.loadFromData(array, "PNG");
-        record->image = image;
-        record->message = "";
-        record->playerID = id;
-        record->gameStep = step;
-        result.append(record);
+void Client::saveImageToResult(const QByteArray &array, const int &step, const int &id){
+    ResultRecord* record = new ResultRecord;
+    QImage image;
+    image.loadFromData(array, "PNG");
+    record->image = image;
+    record->message = "";
+    record->playerID = id;
+    record->gameStep = step;
+    result.append(record);
 }
 
-void Client::saveMessageToResult(const QString &from, const QString &message, const int &step, const int &id){
-        ResultRecord* record = new ResultRecord;
-        record->message = message;
-        record->playerID = id;
-        record->gameStep = step;
-        result.append(record);
+void Client::saveMessageToResult(const QString &message, const int &step, const int &id){
+    ResultRecord* record = new ResultRecord;
+    record->message = message;
+    record->playerID = id;
+    record->gameStep = step;
+    result.append(record);
 }
 
 ResultRecord* Client::getFromResult(int step, int id){

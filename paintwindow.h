@@ -34,7 +34,7 @@ private:
     int stepSecondsLeft;
     QTimer indicatorTimer;
     bool isPressedTurnEnd;
-
+    void delay(int sec);
     void initColorButton(QPushButton* button, QImage imgActive, QImage imgInactive, QColor color);
     void turnEnd();
 
@@ -46,12 +46,13 @@ private slots:
     void slotBtnColorClicked(int number);
     void sldSetLineWidth(int numberWidth);
     void btnReadyClick();
-    void onStartGame(const QString &from);
-    void onNextGameStep(const QString &from);
+    void onStartGame();
+    void onNextGameStep();
     void startTimeIndicator();
-    void onGameShowImage(const QString &from, const QByteArray &array);
-    void onGameShowMessage(const QString &from, const QString &message);
-    void onEndGame(const QString &from);
+    void onGameShowImage(const QByteArray &array);
+    void onGameShowMessage(const QString &message);
+    void onEndGame();
+    void onStopGameError(const QString &message);
 
 signals:
     void toMenuWindow();
