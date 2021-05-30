@@ -15,7 +15,7 @@ ResultWindow::ResultWindow(QWidget *parent, Client *client) : QWidget(parent), u
     connect(ui->btnIncCount, SIGNAL(clicked()), this, SLOT(btnIncCountClick()));
     connect(ui->btnDecCount, SIGNAL(clicked()), this, SLOT(btnDecCountClick()));
     connect(ui->btnUpdate, SIGNAL(clicked()), this, SLOT(updateResultList()));
-    showIndicator(fork);
+    showIndicator(fork + 1);
 }
 
 void ResultWindow::initUi(){
@@ -53,16 +53,16 @@ ResultWindow::~ResultWindow()
 }
 
 void ResultWindow::btnIncCountClick(){
-    if (fork < 9) {
+    if (fork < client->maxPlayerCount - 1) {
         fork++;
-        showIndicator(fork);
+        showIndicator(fork + 1);
     }
 }
 
 void ResultWindow::btnDecCountClick(){
     if (fork > 0) {
         fork--;
-        showIndicator(fork);
+        showIndicator(fork + 1);
     }
 
 }
@@ -81,7 +81,7 @@ void ResultWindow::updateResultList(){
     for (int step = 0; step < maxStepCount; step++){
         for (ResultRecord* record : client->result) {
             if ((record->playerID == id) && (record->gameStep == step)) {
-                delay(2);
+                delay(1);
                 if (!record->image.isNull()) { //// image
                     QGraphicsPixmapItem *item = new QGraphicsPixmapItem(QPixmap::fromImage(record->image));
                     QGraphicsScene* scene = new QGraphicsScene;
@@ -97,7 +97,8 @@ void ResultWindow::updateResultList(){
                 } else {  //// message
                     QLabel* label = new QLabel;
                     label->setText(record->message);
-                    label->setMinimumSize(QSize(600, 30));
+                    label->setMinimumSize(QSize(943, 40));
+                    label->setStyleSheet("QLabel{background-color: rgb(224, 173, 100);}");
                     int id = QFontDatabase::addApplicationFont(":fonts/20322");
                     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
                     QFont titleFont(family);
@@ -105,7 +106,7 @@ void ResultWindow::updateResultList(){
                     label->setFont(titleFont);
                     label->show();
                     ui->resultVbox->addWidget(label);
-                    ui->resultAreaWidget->resize(ui->resultAreaWidget->geometry().width(), ui->resultAreaWidget->geometry().height() + 30);
+                    ui->resultAreaWidget->resize(ui->resultAreaWidget->geometry().width(), ui->resultAreaWidget->geometry().height() + 45);
                 }
             }
         }

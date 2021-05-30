@@ -282,7 +282,6 @@ void CreateRoomWindow::stepBody(bool isError){
 void CreateRoomWindow::endGame(){
     isGameOver = true;
 
-   // printf("Game Over\n");
     for(Player* player : client->playersInRoom){  /// send to all results
         for(ResultRecord* record : client->result){
             if (!record->image.isNull()) { //// image
@@ -335,18 +334,6 @@ void CreateRoomWindow::btnPlayClick(){
         client->sendMessageTo(player->usercode, player->userIP, message);
         message = "startGame\n\n";
         client->sendMessageTo(player->usercode, player->userIP, message);
-
-
-        QImage image = QImage(":/startImage");
-        //QDir::currentPath() + "/images_menu/" + imgName
-        QByteArray array;
-        QBuffer buffer(&array);
-        buffer.open(QIODevice::WriteOnly);
-        image.save(&buffer, "PNG");
-
-        array = client->commandToByteArray("gameShowImage\n*", array);
-        client->sendByteArrayTo(player->usercode, player->userIP, array);
-
         isGameOver = false;
         stepSecondsLeft = MaxGameStepInterval;
         nextGameStep();

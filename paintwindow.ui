@@ -308,7 +308,7 @@ background-image: url(:/messageBox);</string>
      <string notr="true">color: rgb(0, 0, 0);</string>
     </property>
     <property name="text">
-     <string>Next</string>
+     <string/>
     </property>
     <property name="flat">
      <bool>true</bool>
@@ -332,7 +332,7 @@ background-image: url(:/messageBox);</string>
      <string notr="true">color: rgb(0, 0, 0);</string>
     </property>
     <property name="text">
-     <string>Prev</string>
+     <string/>
     </property>
     <property name="flat">
      <bool>true</bool>

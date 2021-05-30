@@ -37,7 +37,6 @@ PaintWindow::PaintWindow(QWidget *parent, Client *client) : QWidget(parent), ui(
     graphicsView->setMinimumSize(QSize(943, 594));
     graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    //printf("width %d\n",graphicsView->width());   ////// del
     paintscene = new PaintScene();       // Инициализируем графическую сцену
     paintscene->setSceneRect(0, 0, graphicsView->width(), graphicsView->height());
     graphicsView->setScene(paintscene);  // Устанавливаем графическую сцену
@@ -57,23 +56,21 @@ PaintWindow::PaintWindow(QWidget *parent, Client *client) : QWidget(parent), ui(
                                         "margin: -13px 38px -13px 38px;}"
                                     );
 
-
-
     QImage imgActive(":imgBtnColorActive");
     QImage imgInactive(":imgBtnColorInactive");
 
-    colorList[0] = QColorConstants::Black;
-    colorList[1] = QColorConstants::DarkBlue;
-    colorList[2] = QColorConstants::DarkMagenta;
-    colorList[3] = QColorConstants::DarkRed;
-    colorList[4] = QColorConstants::DarkGreen;
-    colorList[5] = QColorConstants::DarkYellow;
-    colorList[6] = QColorConstants::White;
-    colorList[7] = QColorConstants::Blue;
-    colorList[8] = QColorConstants::Red;
-    colorList[9] = QColorConstants::Gray;
-    colorList[10] = QColorConstants::Green;
-    colorList[11] = QColorConstants::Yellow;
+    colorList[0] = QColor(51,51,51);//QColorConstants::Black;
+    colorList[1] = QColor(51,102,153);//QColorConstants::DarkBlue;
+    colorList[2] = QColor(255,102,102);//QColorConstants::DarkMagenta;
+    colorList[3] = QColor(204,51,51);//QColorConstants::DarkRed;
+    colorList[4] = QColor(51,153,153);//QColorConstants::DarkGreen;
+    colorList[5] = QColor(255,153,102);//QColorConstants::DarkYellow;
+    colorList[6] = QColor(255,255,204);//QColorConstants::White;
+    colorList[7] = QColor(153,204,255);//QColorConstants::Blue;
+    colorList[8] = QColor(204,204,153);//QColorConstants::Red;
+    colorList[9] = QColor(204,204,204);//QColorConstants::Gray;
+    colorList[10] = QColor(153,204,102);//QColorConstants::Green;
+    colorList[11] = QColor(255,204,51);//QColorConstants::Yellow;
 
     QButtonGroup* ColorGroup = new QButtonGroup(ui->groupBoxColor);
     ColorGroup->setExclusive(true);
@@ -140,14 +137,6 @@ QImage PaintWindow::setImageColor(QImage image, QColor color){
             if (image.pixelColor(i, j) == QColorConstants::Black){
                 image.setPixelColor(i, j, color);
             }
-            /*
-            if (image.pixelColor(i,j).alpha() > 0) {
-                r = (image.pixelColor(i,j).red() + color.red()) > 255 ? 255 : image.pixelColor(i,j).red() + color.red();
-                g = (image.pixelColor(i,j).green() + color.green()) > 255 ? 255 : image.pixelColor(i,j).green() + color.green();
-                b = (image.pixelColor(i,j).blue() + color.blue()) > 255 ? 255 : image.pixelColor(i,j).blue() + color.blue();
-                image.setPixelColor(i,j, QColor(r, g, b));
-            }
-            */
         }
     }
 
@@ -203,7 +192,6 @@ void PaintWindow::btnPrevClick(){
 
 void PaintWindow::pushGraphicsItemStack(QList<QGraphicsItem*> element){
     int countElementGraphicsItemStack = 0;
-    //ui->labMessage->setText(QString::number(element.size()));
     for (int i = 0; i < element.size(); i++){
         graphicsItemStack.push_front(element[i]);
     }
@@ -212,7 +200,6 @@ void PaintWindow::pushGraphicsItemStack(QList<QGraphicsItem*> element){
             countElementGraphicsItemStack++;
         }
     }
-    //ui->labMessage->setText(QString::number(countElementGraphicsItemStack));
     // delete overflow elements
     if (countElementGraphicsItemStack > maxElementGraphicsItemStack) {
         if (!graphicsItemStack.isEmpty()) {
@@ -253,7 +240,7 @@ void PaintWindow::turnEnd(){
         if ((client->currentGameStep % 2) == 0) { /// step 0,2,4,.. - text , step 1,3,5, - image
             QString message = "gameMessageResult\n" + ui->lineEdit->text() + "\n" + QString::number(client->currentGameStep) + "\n" + QString::number(client->userId);
             client->sendMessageTo(client->roomname.split("\n").at(1), client->roomname.split("\n").at(2), message);
-            ui->labMessage->setText("Сообщение ушло");  /////////
+            ui->labMessage->setText("Сообщение отправлено");
         } else {
             QImage image(paintscene->sceneRect().size().toSize(), QImage::Format_ARGB32);
             image.fill(currBackgroundColor);
@@ -266,7 +253,7 @@ void PaintWindow::turnEnd(){
             image.save(&buffer, "PNG");
             array = client->commandToByteArray("gameImageResult\n" + QString::number(client->currentGameStep) + "\n" + QString::number(client->userId), array);
             client->sendByteArrayTo(client->roomname.split("\n").at(1), client->roomname.split("\n").at(2), array);
-            ui->labMessage->setText("Сообщение ушло");  ////////
+            ui->labMessage->setText("Сообщение отправлено");
         }
     }
     isPressedTurnEnd = true;
@@ -298,8 +285,15 @@ void PaintWindow::onStartGame(){
     client->currentGameStep = 0;
     stepSecondsLeft = GameStepInterval;
     isPressedTurnEnd = false;
-    startTimeIndicator();
 
+    QImage image = QImage(":/startImageNew");
+    QGraphicsPixmapItem *item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+    QGraphicsScene* scene = new QGraphicsScene;
+    scene->addItem(item);
+    graphicsView->setScene(scene);
+    ui->lineEdit->setText("");
+    ui->lineEdit->setReadOnly(false);
+    startTimeIndicator();
 }
 
 void PaintWindow::onNextGameStep(){
@@ -329,7 +323,11 @@ void PaintWindow::onGameShowImage(const QByteArray &array){
 
 void PaintWindow::onGameShowMessage(const QString &message){
     graphicsView->setScene(paintscene);
-    ui->labMessage->setText("Нарисуйте: " + message);
+    if (client->currentGameStep == 0) {
+        ui->labMessage->setText(message);
+    } else {
+        ui->labMessage->setText("Нарисуйте: " + message);
+    }
     ui->lineEdit->setText("");
     ui->lineEdit->setReadOnly(true);
 }
@@ -340,7 +338,6 @@ void PaintWindow::onEndGame(){
 
 void PaintWindow::onStopGameError(const QString &message){
     ui->labMessage->setText(message);
-    //printf("1111111111111111111111\n");
     delay(5);
     this->close();
     emit toMenuWindow();

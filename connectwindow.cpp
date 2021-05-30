@@ -76,7 +76,6 @@ void ConnectWindow::showLight(bool isOn){
 void ConnectWindow::updatePlayerList(){
     showUsername();
     clearRooms();
-    int count = 0;
     for (Player* player: client->playerList){
         if (player->userstatus.left(4) == "Room") {
             int playersCount = player->userstatus.mid(4,1).toInt();
@@ -93,7 +92,6 @@ void ConnectWindow::updatePlayerList(){
             ui->roomsVbox->addWidget(roomrecord);
             ui->roomsAreaWidget->resize(ui->roomsAreaWidget->geometry().width(), ui->roomsAreaWidget->geometry().height() + 60);
             rooms.append(roomrecord);
-            count++;
         }
     }
 }
@@ -212,8 +210,8 @@ void ConnectWindow::onSelectRoom(RoomRecord* record){
 }
 
 void ConnectWindow::onStartGame() {
-    requestTimer.stop();   /// ?????
-    isWaitRequest = false; /// ???
+    requestTimer.stop();
+    isWaitRequest = false;
     this->close();
 }
 
